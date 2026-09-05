@@ -24,3 +24,24 @@ dist-ssr
 *.sw?
 
 .env*
+
+# Python virtual environment
+AIML/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Generated audio
+AIML/audio/recordings/
+
+# Generated logs
+AIML/logs/
+
+# Environment/secrets
+.env
+*.env
+
+# IDE
+.vscode/
