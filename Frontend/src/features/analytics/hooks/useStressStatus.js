@@ -1,0 +1,25 @@
+import { useMemo } from 'react';
+
+export function useStressStatus(entries, statsData) {
+  const currentStress = useMemo(() => {
+    if (statsData?.currentStressStatus !== undefined && statsData?.currentStressStatus !== 0) {
+      return statsData.currentStressStatus;
+    }
+    if (!entries || entries.length === 0) return 30;
+    const entriesWithStress = entries.filter((e) => e.raw?.gemini_response?.stress_score !== undefined);
+    if (entriesWithStress.length > 0) {
+      const sum = entriesWithStress.reduce((acc, curr) => acc + (curr.raw.gemini_response.stress_score || 0), 0);
+      return Math.round(sum / entriesWithStress.length);
+    }
+    return 30;
+  }, [entries, statsData]);
+
+  const stressCategory = useMemo(() => {
+    if (currentStress >= 75) return { label: 'High Stress Alert', color: 'var(--accent-rose)', badge: 'Critical' };
+    if (currentStress >= 55) return { label: 'Elevated Pressure', color: 'var(--accent-amber)', badge: 'Elevated' };
+    if (currentStress >= 35) return { label: 'Moderate Workload', color: 'var(--primary)', badge: 'Moderate' };
+    return { label: 'Optimal Recovery', color: 'var(--accent-green)', badge: 'Optimal' };
+  }, [currentStress]);
+
+  return { currentStress, stressCategory };
+}
