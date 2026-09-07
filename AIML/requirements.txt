@@ -1,0 +1,5 @@
+psutil
+torch
+sounddevice 
+soundfile
+numpy 
