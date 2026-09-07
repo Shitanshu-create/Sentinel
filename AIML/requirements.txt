@@ -3,3 +3,4 @@ torch
 sounddevice 
 soundfile
 numpy 
+faster-whisper
