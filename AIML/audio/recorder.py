@@ -9,15 +9,15 @@ Responsible for:
 - Saving recordings as WAV files for debugging/testing
 """
 
-from __future__ import annotations 
+from __future__ import annotations #This is realted to type hinting and allows for forward references in type annotations.
 
-import queue
-from pathlib import Path
-from typing import Optional
+import queue #FIFO
+from pathlib import Path #Helps working with file paths in a platfrom-independent way.
+from typing import Optional #Thus value can have a specific type or be None.
 
-import numpy as np
-import sounddevice as sd
-import soundfile as sf
+import numpy as np 
+import sounddevice as sd #Allow python to interact with audio devices, such as microphones and speakers.
+import soundfile as sf #Used to read and write audio files in various formats, including WAV, FLAC, and OGG.
 
 
 class AudioRecorder:
@@ -37,8 +37,8 @@ class AudioRecorder:
     def __init__(
         self,
         sample_rate: int = 16000,
-        channels: int = 1,
-        dtype: str = "float32",
+        channels: int = 1, 
+        dtype: str = "float32", 
         device: Optional[int | str] = None,
     ):
         """
@@ -59,30 +59,30 @@ class AudioRecorder:
         self.dtype = dtype
         self.device = device
 
-        # Stores audio blocks received from microphone
+        # Stores audio blocks received from microphone, usefull for real time processing later.
         self.audio_queue = queue.Queue()
 
         # Stores complete recording
         self.audio_chunks: list[np.ndarray] = []
 
-        # Microphone stream
+        # This variable will store the microphone stream
         self.stream: Optional[sd.InputStream] = None
 
         # Recording state
         self.is_recording = False
 
 
-    @staticmethod
+    @staticmethod #Belongs to a class but does not require an object
     def list_devices() -> None:
         """Print all available audio devices."""
 
         print("\nAVAILABLE AUDIO DEVICES")
         print("-" * 60)
 
-        devices = sd.query_devices()
+        devices = sd.query_devices() # Ask operating system for a list of all audio devices, including microphones and speakers.
 
         for index, device in enumerate(devices):
-            if device["max_input_channels"] > 0:
+            if device["max_input_channels"] > 0: #Can this device be used for recording audio? If yes, print its details.
                 print(
                     f"[{index}] "
                     f"{device['name']} "
@@ -107,8 +107,8 @@ class AudioRecorder:
 
     def _audio_callback(
         self,
-        indata: np.ndarray,
-        frames: int,
+        indata: np.ndarray, #Contain actual audio data from the microphone.
+        frames: int, #Number of frames in the current audio block.
         time,
         status,
     ) -> None:
@@ -142,6 +142,8 @@ class AudioRecorder:
                 Smaller blocks reduce latency but increase processing overhead.
         """
 
+        #Microphone audio is delivered approximately every half second, which is a good balance between latency and performance.
+
         if self.is_recording:
             print("Recording is already running.")
             return
@@ -150,26 +152,28 @@ class AudioRecorder:
         self.audio_chunks = []
 
         # Clear queue
-        while not self.audio_queue.empty():
+        while not self.audio_queue.empty(): #While the queue still has audio chunks
             try:
-                self.audio_queue.get_nowait()
-            except queue.Empty:
+                self.audio_queue.get_nowait() #Remove an item immediately without waiting.
+            except queue.Empty: #If the queue is unespectedly become empty stop the loop
                 break
 
         block_size = int(self.sample_rate * block_duration)
 
         try:
+            #Below creates a new microphone input stream with the specified parameters and connects it to the _audio_callback method, which will be called whenever new audio data is available.
+
             self.stream = sd.InputStream(
                 samplerate=self.sample_rate,
-                channels=self.channels,
+                channels=self.channels, #If none then default is used
                 dtype=self.dtype,
                 device=self.device,
                 blocksize=block_size,
-                callback=self._audio_callback,
+                callback=self._audio_callback, #connects microphone to your function
             )
 
             self.is_recording = True
-            self.stream.start()
+            self.stream.start() #After this microphone audio will start being captured and sent to the _audio_callback method.
 
             print("Microphone recording started.")
 
@@ -201,10 +205,8 @@ class AudioRecorder:
 
         print("Microphone recording stopped.")
 
-    # ------------------------------------------------------------------
-    # AUDIO RETRIEVAL
-    # ------------------------------------------------------------------
 
+    #Audio Retrieval and Saving Methods
     def get_audio(self) -> np.ndarray:
         """
         Return the complete recorded audio.
@@ -221,7 +223,7 @@ class AudioRecorder:
 
         return np.concatenate(
             self.audio_chunks,
-            axis=0,
+            axis=0, #Means that the audio chunks will be combined along the first axis, which corresponds to the time dimension in a 1D audio signal.
         )
 
     def get_next_chunk(
@@ -230,7 +232,6 @@ class AudioRecorder:
     ) -> Optional[np.ndarray]:
         """
         Get the next live audio chunk.
-
         Useful later for real-time transcription.
 
         Args:
@@ -241,7 +242,7 @@ class AudioRecorder:
         """
 
         try:
-            return self.audio_queue.get(timeout=timeout)
+            return self.audio_queue.get(timeout=timeout) #Retrieve the next audio chunk from the queue, waiting up to timeout secounds if necessary. If no audio chunk is available within the specified timeout, it will raise a queue.Empty expection, which is caught and handled by returning None.
 
         except queue.Empty:
             return None
@@ -284,7 +285,7 @@ class AudioRecorder:
             Path to saved audio file.
         """
 
-        audio = self.get_audio()
+        audio = self.get_audio() #This get all the recorded audio chunks and concatenates them into a single NumPy array.
 
         output_path = Path(output_path)
 
@@ -333,11 +334,13 @@ class AudioRecorder:
 
 if __name__ == "__main__":
 
+    AudioRecorder.list_devices()
     print("Testing Audio Recorder")
     recorder = AudioRecorder(
         sample_rate=16000,
         channels=1,
     )
+
 
     try:
         recorder.start()
