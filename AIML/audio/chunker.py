@@ -9,7 +9,7 @@ Responsible for:
 - Retaining overlap between chunks when needed
 """
 
-from collections import deque
+from collections import deque #special python data strucutre (Pronounced as deck), it is usefull when you frequently add and remove items from the beginning or end.
 
 import numpy as np
 
@@ -35,10 +35,10 @@ class AudioChunker:
 
     def __init__(
         self,
-        sample_rate: int = 16000,
-        chunk_duration: float = 5.0,
-        overlap_duration: float = 0.5,
-        max_buffer_duration: float = 30.0,
+        sample_rate: int = 16000, #How many audio sample exist in 1 secound of audio
+        chunk_duration: float = 5.0, #We want each transcription chunk to be 5 secound long
+        overlap_duration: float = 0.5,#Gives the speech recognizer context around the boundary
+        max_buffer_duration: float = 30.0, #Never allow more than 30 sec of audio to accumulate in memory. If the buffer exceeds this limit, the oldest audio is discarded.
     ):
         """
         Args:
@@ -64,15 +64,15 @@ class AudioChunker:
 
         self.target_samples = int(
             chunk_duration * sample_rate
-        )
+        ) #80000 samples for 5 secound of audio at 16kHz
 
         self.overlap_samples = int(
             overlap_duration * sample_rate
-        )
+        ) #Keep the last 8000 samples for 0.5 second of audio at 16kHz
 
         self.max_buffer_samples = int(
             max_buffer_duration * sample_rate
-        )
+        ) #4800000 samples for 30 secound of audio at 16kHz
 
         # Store incoming audio blocks
         self.buffer = deque()
@@ -80,9 +80,6 @@ class AudioChunker:
         # Track total samples currently buffered
         self.buffer_samples = 0
 
-    # ------------------------------------------------------------------
-    # ADD AUDIO
-    # ------------------------------------------------------------------
 
     def add_audio(
         self,
@@ -104,7 +101,7 @@ class AudioChunker:
         if audio.size == 0:
             return
 
-        # Ensure mono audio
+        # Ensure mono audio -> Convert multi-channel audio to mono
         if audio.ndim == 2:
             audio = np.mean(
                 audio,
@@ -116,7 +113,8 @@ class AudioChunker:
                 f"Expected mono audio, got shape {audio.shape}"
             )
 
-        # Convert to float32
+        # Convert to float32 -> because audio processing libraries often expect this format, and it ensures consistency in data type for downstream processing.
+
         audio = audio.astype(
             np.float32,
             copy=False,
@@ -129,9 +127,6 @@ class AudioChunker:
         # Prevent unlimited memory growth
         self._limit_buffer()
 
-    # ------------------------------------------------------------------
-    # CHUNK STATUS
-    # ------------------------------------------------------------------
 
     def is_chunk_ready(self) -> bool:
         """
@@ -141,9 +136,6 @@ class AudioChunker:
 
         return self.buffer_samples >= self.target_samples
 
-    # ------------------------------------------------------------------
-    # GET CHUNK
-    # ------------------------------------------------------------------
 
     def get_chunk(self) -> np.ndarray | None:
         """
@@ -160,12 +152,12 @@ class AudioChunker:
         # Combine buffered blocks
         combined_audio = np.concatenate(
             list(self.buffer)
-        )
+        ) #np.concatenate() expects something it can iterate over, so we convert deque to a list.
 
         # Extract target chunk
         chunk = combined_audio[
             :self.target_samples
-        ]
+        ] # Start at the beginning and take the first 80000 samples
 
         # Calculate remaining audio
         remaining_audio = combined_audio[
@@ -203,9 +195,6 @@ class AudioChunker:
 
         return chunk
 
-    # ------------------------------------------------------------------
-    # FLUSH
-    # ------------------------------------------------------------------
 
     def flush(
         self,
@@ -243,17 +232,17 @@ class AudioChunker:
 
         return audio
 
-    # ------------------------------------------------------------------
-    # BUFFER MANAGEMENT
-    # ------------------------------------------------------------------
 
     def _limit_buffer(self) -> None:
+
         """
         Prevent unlimited memory usage.
 
         Removes oldest audio if the buffer
         exceeds the configured maximum size.
         """
+
+        # Underscore usually meanse that this is an internla/helper intended to be used as inside the class only, not to be called from outside the class.
 
         if self.buffer_samples <= self.max_buffer_samples:
             return
@@ -274,10 +263,6 @@ class AudioChunker:
             combined_audio
         )
 
-    # ------------------------------------------------------------------
-    # INFORMATION
-    # ------------------------------------------------------------------
-
     def get_buffer_duration(self) -> float:
         """
         Return current buffered audio duration.
@@ -296,10 +281,6 @@ class AudioChunker:
         self.buffer.clear()
         self.buffer_samples = 0
 
-
-# ======================================================================
-# TEST
-# ======================================================================
 
 if __name__ == "__main__":
 
