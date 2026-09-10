@@ -19,11 +19,12 @@ export function useObservations(insights) {
   }, [activeObservations]);
 
   const activeAdvice = useMemo(() => {
-    if (insights?.advices && insights.advices.length > 0) {
-      return insights.advices.map(a => [a.category, a.title, a.body, a.action]);
+    const list = insights?.welfareRecommendations || insights?.advices;
+    if (list && list.length > 0) {
+      return list.map(a => [a.category, a.title, a.body, a.action]);
     }
     return [];
-  }, [insights?.advices]);
+  }, [insights?.welfareRecommendations, insights?.advices]);
 
   const visibleAdvice = activeAdvice.filter((item) => !dismissedAdvice.includes(item[1]));
 

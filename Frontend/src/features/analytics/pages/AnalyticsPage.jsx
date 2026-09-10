@@ -11,6 +11,8 @@ import { useHeatmapDays } from '../hooks/useHeatmapDays.js';
 import { useObservations } from '../hooks/useObservations.js';
 import { useStressStatus } from '../hooks/useStressStatus.js';
 import { useWellnessRisk } from '../hooks/useWellnessRisk.js';
+import { useWellnessTrends } from '../hooks/useWellnessTrends.js';
+import { useWellnessOverview } from '../hooks/useWellnessOverview.js';
 
 // Components
 import { AnalyticsHeader } from '../components/AnalyticsHeader.jsx';
@@ -23,10 +25,13 @@ import { AdvicePanel } from '../components/AdvicePanel.jsx';
 import { WellnessScorePanel } from '../components/WellnessScorePanel.jsx';
 import { StressStatusPanel } from '../components/StressStatusPanel.jsx';
 import { WellnessRiskPanel } from '../components/WellnessRiskPanel.jsx';
+import { WellnessTrendsPanel } from '../components/WellnessTrendsPanel.jsx';
+import { WellnessOverviewPanel } from '../components/WellnessOverviewPanel.jsx';
 
 function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectEntry }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [range, setRange] = useState('Past Month');
+  const [trendsRange, setTrendsRange] = useState('30D');
 
   const { statsData, insights, statsRequest, insightsRequest } = useAnalyticsData(entries);
   const { timeline, timelineLabels } = useTimelineData(entries, range);
@@ -34,6 +39,15 @@ function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectE
   const { computedWellnessScores, overallWellnessScore } = useWellnessScores(entries);
   const { currentStress, stressCategory } = useStressStatus(entries, statsData);
   const { riskMeta } = useWellnessRisk(entries, statsData);
+  const { trendData, labels: trendLabels } = useWellnessTrends(entries, trendsRange);
+  const { overview } = useWellnessOverview({
+    currentStress,
+    stressCategory,
+    riskMeta,
+    statsData,
+    overallWellnessScore,
+    entries
+  });
   const {
     activeObservations,
     visibleAdvice,
@@ -69,10 +83,19 @@ function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectE
 
             <StatsGrid statsData={statsData} />
 
+            <WellnessOverviewPanel overview={overview} />
+
             <div className="two-column-layout">
               <StressStatusPanel currentStress={currentStress} stressCategory={stressCategory} />
               <WellnessRiskPanel riskMeta={riskMeta} />
             </div>
+
+            <WellnessTrendsPanel
+              range={trendsRange}
+              setRange={setTrendsRange}
+              trendData={trendData}
+              labels={trendLabels}
+            />
 
             <div className="charts-layout">
               <MoodTimelinePanel range={range} setRange={setRange} timeline={timeline} labels={timelineLabels[range]} />

@@ -19,6 +19,8 @@ export function useEntryActions({
   setEntries,
   title,
   setTitle,
+  sleepHours,
+  setSleepHours,
   journalText,
   editorReady,
   editor,
@@ -43,6 +45,9 @@ export function useEntryActions({
 
     const cleanTitle = title.trim() || 'Untitled entry';
     const cleanText = !editorReady || editor.isEmpty ? 'No text yet.' : journalText.trim();
+    const parsedSleep = sleepHours !== '' && sleepHours !== null && sleepHours !== undefined
+      ? Number(sleepHours)
+      : undefined;
 
     try {
       setSaveStatus({ loading: true, error: null, success: false, message: null });
@@ -61,7 +66,8 @@ export function useEntryActions({
         res = await updateEntry(selectedEntryId, {
           title: cleanTitle,
           chat: cleanText,
-          aiActive: aiEnabled
+          aiActive: aiEnabled,
+          sleepHours: parsedSleep
         });
         const formatted = formatEntry(res.entry);
         setEntries((current) =>
@@ -73,6 +79,7 @@ export function useEntryActions({
           title: cleanTitle,
           chat: cleanText,
           aiActive: aiEnabled,
+          sleepHours: parsedSleep,
           uploadedFiles
         });
         const formatted = formatEntry(res.journalReport);
@@ -81,6 +88,7 @@ export function useEntryActions({
         setSaveStatus({ loading: false, error: null, success: true, message: 'Saved' });
         sessionStorage.removeItem('unsaved_journal_title');
         sessionStorage.removeItem('unsaved_journal_content');
+        sessionStorage.removeItem('unsaved_journal_sleep');
       }
     } catch (err) {
       console.error("Failed to save entry:", err);
@@ -123,7 +131,9 @@ export function useEntryActions({
     clearActionStatus();
     sessionStorage.removeItem('unsaved_journal_title');
     sessionStorage.removeItem('unsaved_journal_content');
+    sessionStorage.removeItem('unsaved_journal_sleep');
     setTitle('');
+    if (setSleepHours) setSleepHours('');
     editor?.commands?.setContent('');
     setSelectedEntryId(null);
   };

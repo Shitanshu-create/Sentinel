@@ -18,7 +18,7 @@ const scoreAverage = (entry) => {
 
 
 async function recalculateUserStats(userId) {
-    const entries = await journalReportModel.find({ userId }).select('date chat gemini_response').sort({ date: 1 });
+    const entries = await journalReportModel.find({ userId }).select('date chat gemini_response sleepHours').sort({ date: 1 });
 
     if (entries.length === 0) {
         await UserStats.findOneAndUpdate(
@@ -31,6 +31,7 @@ async function recalculateUserStats(userId) {
                 avgMoodScore: 0,
                 currentStressStatus: 0,
                 wellnessRiskLevel: "normal",
+                avgSleepHours: null,
                 lastEntryDate: null
             },
             { upsert: true, returnDocument: "after" }
@@ -43,6 +44,11 @@ async function recalculateUserStats(userId) {
     }, 0);
 
     const avgMoodScore = entries.reduce((sum, entry) => sum + scoreAverage(entry), 0) / entries.length;
+
+    const entriesWithSleep = entries.filter(e => e.sleepHours !== null && e.sleepHours !== undefined);
+    const avgSleepHours = entriesWithSleep.length > 0
+        ? Math.round((entriesWithSleep.reduce((sum, e) => sum + e.sleepHours, 0) / entriesWithSleep.length) * 10) / 10
+        : null;
 
     // Calculate currentStressStatus (average of stress scores across recent entries)
     const entriesWithStress = entries.filter(e => e.gemini_response?.stress_score !== undefined);
@@ -103,6 +109,7 @@ async function recalculateUserStats(userId) {
             avgMoodScore,
             currentStressStatus,
             wellnessRiskLevel,
+            avgSleepHours,
             lastEntryDate: latestEntry.date
         },
         { upsert: true, returnDocument: "after" }

@@ -46,6 +46,10 @@ function WritingPage({
     if (!selectedEntryId) return sessionStorage.getItem('unsaved_journal_title') || '';
     return '';
   });
+  const [sleepHours, setSleepHours] = useState(() => {
+    if (!selectedEntryId) return sessionStorage.getItem('unsaved_journal_sleep') || '';
+    return '';
+  });
   const [aiEnabled, setAiEnabled] = useState(true);
 
   const { editor, editorReady, journalText, setJournalText } = useJournalEditor({ selectedEntryId });
@@ -66,6 +70,8 @@ function WritingPage({
     setEntries,
     title,
     setTitle,
+    sleepHours,
+    setSleepHours,
     journalText,
     editorReady,
     editor,
@@ -106,12 +112,15 @@ function WritingPage({
         } else {
           setMedia(null);
         }
+        setSleepHours(entry.raw?.sleepHours !== null && entry.raw?.sleepHours !== undefined ? String(entry.raw.sleepHours) : '');
       }
     } else {
       const savedTitle = sessionStorage.getItem('unsaved_journal_title') || '';
       const savedContent = sessionStorage.getItem('unsaved_journal_content') || '';
+      const savedSleep = sessionStorage.getItem('unsaved_journal_sleep') || '';
       setTitle(savedTitle);
       setJournalText(savedContent);
+      setSleepHours(savedSleep);
       editor?.commands?.setContent(savedContent);
       setMedia(null);
     }
@@ -122,8 +131,9 @@ function WritingPage({
     if (!selectedEntryId) {
       sessionStorage.setItem('unsaved_journal_title', title);
       sessionStorage.setItem('unsaved_journal_content', journalText);
+      sessionStorage.setItem('unsaved_journal_sleep', sleepHours);
     }
-  }, [title, journalText, selectedEntryId]);
+  }, [title, journalText, sleepHours, selectedEntryId]);
 
   return (
     <main className="writing-page-container writing-scroll">
@@ -158,15 +168,34 @@ function WritingPage({
                 </div>
               )}
 
-              <label className="writing-label">
-                Title
-              </label>
-              <input
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder="Give this entry a name..."
-                className="writing-title-input"
-              />
+              <div className="writing-header-fields">
+                <div className="writing-title-field">
+                  <label className="writing-label">
+                    Title
+                  </label>
+                  <input
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    placeholder="Give this entry a name..."
+                    className="writing-title-input"
+                  />
+                </div>
+                <div className="writing-sleep-field">
+                  <label className="writing-label">
+                    Sleep (Hrs)
+                  </label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="24"
+                    step="0.5"
+                    value={sleepHours}
+                    onChange={(event) => setSleepHours(event.target.value)}
+                    placeholder="e.g. 7.5"
+                    className="writing-sleep-input"
+                  />
+                </div>
+              </div>
 
               <label className="writing-label">
                 Writing

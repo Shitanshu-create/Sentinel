@@ -11,13 +11,13 @@ export function useAnalyticsData(entries) {
     currentStreak: 0,
     avgMoodScore: 0,
     currentStressStatus: 0,
-    wellnessRiskLevel: 'normal'
+    wellnessRiskLevel: 'normal',
+    avgSleepHours: null
   });
 
   const [insights, setInsights] = useState({
     observations: [],
-    advices: [],
-    themes: []
+    welfareRecommendations: []
   });
   
   const [statsRequest, setStatsRequest] = useState({ loading: false, error: null });

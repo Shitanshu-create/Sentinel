@@ -53,7 +53,7 @@ function buildJournalContext(entries) {
             });
             const mood = entry.gemini_response;
             const moodStr = mood
-                ? `Calmness: ${mood.calmness_score}/10, Anxiety: ${mood.anxious_score}/10, Productivity: ${mood.productivity_score}/10, Sadness: ${mood.sadness_score}/10, Happiness: ${mood.happiness_score}/10`
+                ? `Calmness: ${mood.calmness_score}/100, Anxiety: ${mood.anxious_score}/100, Productivity: ${mood.productivity_score}/100, Sadness: ${mood.sadness_score}/100, Happiness: ${mood.happiness_score}/100, Stress: ${mood.stress_score ?? 'N/A'}/100, Risk Level: ${mood.risk_level ?? 'normal'}`
                 : 'No mood data';
             const reflections = entry.reflection && entry.reflection.length > 0
                 ? entry.reflection.join('; ')
@@ -93,7 +93,7 @@ async function chatWithJournalContext({ userId, message, conversationHistory = [
 
     const journalContext = buildJournalContext(entries);
 
-    const systemInstruction = `You are Innerly — a warm, perceptive, and emotionally intelligent AI companion embedded in a personal journaling app. Your role is to help the user understand their own mental health patterns, emotions, and growth over time by drawing on their journal entries.
+    const systemInstruction = `You are Sentinel — a warm, perceptive AI wellness companion embedded in a personnel welfare journaling system. Your role is to help the user reflect on their own stress, fatigue, and wellness patterns over time by drawing on their journal entries — never to diagnose or replace a welfare officer or medical professional.
 
 PERSONALITY & TONE:
 - Speak like a wise, caring friend — never clinical or robotic
@@ -113,6 +113,7 @@ CAPABILITIES:
 
 BOUNDARIES:
 - Never fabricate journal content that doesn't exist
+- You are a supportive reflection tool, not a clinical or diagnostic authority. If the user describes something suggesting acute risk to themselves, gently and clearly encourage them to reach out to a trusted person or crisis support immediately, in addition to anything else you say.
 - If the user seems in crisis, gently suggest professional help
 - Keep the conversation supportive and non-judgmental
 
@@ -126,12 +127,12 @@ ${journalContext}`;
         if (msg.role === 'user') {
             fullPrompt += `User: ${sanitizeForPrompt(msg.text)}\n\n`;
         } else {
-            fullPrompt += `Innerly: ${sanitizeForPrompt(msg.text)}\n\n`;
+            fullPrompt += `Sentinel: ${sanitizeForPrompt(msg.text)}\n\n`;
         }
     }
 
     /* Add the current user message */
-    fullPrompt += `User: ${sanitizeForPrompt(message)}\n\nNow respond as Innerly to the user's latest message above.`;
+    fullPrompt += `User: ${sanitizeForPrompt(message)}\n\nNow respond as Sentinel to the user's latest message above.`;
 
     const response = await ai.models.generateContent({
         model: env.geminiModel,

@@ -7,14 +7,14 @@ export async function fetchEntries() {
 }
 
 // * Create new journal entry with optional AI analysis and base64 media
-export async function createEntry({ chat, title, aiActive, uploadedFiles }) {
-    const response = await api.post('/api/journal', { chat, title, aiActive, uploadedFiles });
+export async function createEntry({ chat, title, aiActive, uploadedFiles, sleepHours }) {
+    const response = await api.post('/api/journal', { chat, title, aiActive, uploadedFiles, sleepHours });
     return response.data;
 }
 
 // * Update existing journal entry by database ID
-export async function updateEntry(id, { chat, title, aiActive }) {
-    const response = await api.put(`/api/journal/${id}`, { chat, title, aiActive });
+export async function updateEntry(id, { chat, title, aiActive, sleepHours }) {
+    const response = await api.put(`/api/journal/${id}`, { chat, title, aiActive, sleepHours });
     return response.data;
 }
 

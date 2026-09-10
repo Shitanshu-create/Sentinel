@@ -68,6 +68,12 @@ const journalReportSchema = new mongoose.Schema({
         default: false,
         index: true
     },
+    sleepHours: {
+        type: Number,
+        min: 0,
+        max: 24,
+        default: null
+    },
 
     gemini_response: {
         type: geminiResponseSchema,

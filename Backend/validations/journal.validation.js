@@ -12,6 +12,7 @@ const journalEntrySchema = z.object({
     chat: z.string().trim().min(1).max(20000),
     title: z.string().trim().min(1).max(180).optional(),
     aiActive: z.boolean().optional(),
+    sleepHours: z.number().min(0).max(24).optional(),
     uploadedFiles: z.array(uploadedFileSchema).max(5).optional()
 });
 

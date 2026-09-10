@@ -68,6 +68,7 @@ async function generateJournalReportController(req, res) {
             reflection: journalReportByAi.reflection,
             media: media,
             isPrivate,
+            sleepHours: req.body.sleepHours ?? null,
             gemini_response: journalReportByAi.gemini_response
         });
 
@@ -123,7 +124,8 @@ async function getUserStatsController(req, res) {
                 currentStreak: 0,
                 avgMoodScore: 0,
                 currentStressStatus: 0,
-                wellnessRiskLevel: "normal"
+                wellnessRiskLevel: "normal",
+                avgSleepHours: null
             };
         }
 
@@ -176,7 +178,7 @@ async function getGlobalInsightsController(req, res) {
         if (filteredEntries.length < 3) {
             return res.status(200).json({
                 message: "Not enough entries for deep analysis yet",
-                insights: { observations: [], advices: [] }
+                insights: { observations: [], welfareRecommendations: [] }
             });
         }
 
@@ -273,6 +275,7 @@ async function modifyJournalController(req, res) {
 
         existingEntry.chat = chat;
         if (title) existingEntry.title = title;
+        if (req.body.sleepHours !== undefined) existingEntry.sleepHours = req.body.sleepHours;
         existingEntry.reflection = journalReportByAi.reflection;
         existingEntry.gemini_response = journalReportByAi.gemini_response;
         existingEntry.isPrivate = isPrivate;

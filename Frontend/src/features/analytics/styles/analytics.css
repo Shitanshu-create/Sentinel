@@ -1009,3 +1009,179 @@
 .text-sm { font-size: 0.875rem; }
 .text-lg { font-size: 1.125rem; }
 .text-xl { font-size: 1.25rem; }
+
+/* ── Wellness Overview Panel ── */
+.wellness-overview-panel {
+  margin-top: 1.5rem;
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.wellness-overview-header {
+  margin-bottom: 1.25rem;
+}
+
+.wellness-overview-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.wellness-overview-status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid currentColor;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.wellness-overview-summary {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+.wellness-overview-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .wellness-overview-body {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.wellness-overview-tiles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  flex: 1 1 0%;
+}
+
+@media (min-width: 640px) {
+  .wellness-overview-tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+.wellness-overview-tile {
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 5.5rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.wellness-overview-tile:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.wellness-overview-tile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.wellness-overview-tile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wellness-overview-tile-delta {
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.delta-up {
+  color: var(--color-success);
+}
+
+.delta-down {
+  color: var(--color-danger);
+}
+
+.wellness-overview-tile-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.wellness-overview-tile-value {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+  margin-top: 0.15rem;
+  margin-bottom: 0;
+}
+
+.wellness-overview-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  flex-shrink: 0;
+}
+
+/* ── Large Radial Score Variant ── */
+.radial-score-wrapper-lg {
+  gap: 0.75rem;
+}
+
+.radial-outer-circle-lg {
+  height: 6.5rem;
+  width: 6.5rem;
+}
+
+.radial-inner-circle-lg {
+  height: 5rem;
+  width: 5rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.radial-label-lg {
+  max-width: 8rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+/* ── Wellness Trends Panel ── */
+.wellness-trends-panel {
+  margin-top: 1.5rem;
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.wellness-trends-chart-wrapper {
+  margin-top: 1rem;
+  width: 100%;
+}
+

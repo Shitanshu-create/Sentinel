@@ -66,40 +66,40 @@ const insightsSchema = {
     properties: {
         observations: {
             type: Type.ARRAY,
-            description: "A list of exactly 4 personalized observations about the user's journaling patterns.",
+            description: "A list of exactly 4 personalized observations about the user's wellness and stress patterns, grounded in their journal entries, duty patterns, and mood/stress trends.",
             items: {
                 type: Type.OBJECT,
                 properties: {
                     text: {
                         type: Type.STRING,
-                        description: "The worded observation referencing patterns or correlations"
+                        description: "The worded observation referencing patterns, trends, or correlations relevant to occupational stress, fatigue, or wellness — never a diagnostic statement."
                     },
                     tag: {
                         type: Type.STRING,
-                        description: "A single distinct word categorization tag like 'Pattern', 'Insight', 'Correlation', or 'Rhythm'"
+                        description: "A single distinct word categorization tag like 'Pattern', 'Trend', 'Fatigue', 'Recovery', or 'Workload'"
                     }
                 },
                 required: ["text", "tag"]
             }
         },
-        advices: {
+        welfareRecommendations: {
             type: Type.ARRAY,
-            description: "A list of exactly 4 highly personalized productivity or wellness advice based on the entries pattern.",
+            description: "A list of exactly 4 highly personalized, non-clinical welfare recommendations grounded in the user's actual stress, fatigue, mood, and sleep patterns — never generic productivity tips.",
             items: {
                 type: Type.OBJECT,
                 properties: {
-                    category: { type: Type.STRING, description: "A simple tag like 'Timing', 'Energy', 'Focus', 'Rest'" },
+                    category: { type: Type.STRING, description: "A simple tag like 'Rest', 'Workload', 'Recovery', 'Support'" },
                     title: { type: Type.STRING, description: "A concise 3-4 word title" },
-                    body: { type: Type.STRING, description: "A 1-2 sentence explanation of the pattern driving this advice." },
-                    action: { type: Type.STRING, description: "A highly actionable 2-3 word button label" },
-                    icon: { type: Type.STRING, description: "A single emoji representing the advice" },
-                    color: { type: Type.STRING, description: "Pick one: 'var(--primary)', 'var(--secondary)', 'var(--accent-green)', 'var(--accent-amber)', 'var(--accent-rose)'" }
+                    body: { type: Type.STRING, description: "A 1-2 sentence explanation of the pattern driving this recommendation, framed as welfare support, not productivity coaching." },
+                    action: { type: Type.STRING, description: "A highly actionable 2-3 word button label, e.g. 'Plan Rest', 'Review Workload'" },
+                    icon: { type: Type.STRING, description: "A single emoji representing the recommendation" },
+                    color: { type: Type.STRING, description: "Pick one: 'var(--color-accent)', 'var(--color-success)', 'var(--color-warning)', 'var(--color-danger)', 'var(--color-purple)'" }
                 },
                 required: ["category", "title", "body", "action", "icon", "color"]
             }
         }
     },
-    required: ["observations", "advices"]
+    required: ["observations", "welfareRecommendations"]
 };
 
 
@@ -109,7 +109,7 @@ async function generateJournalReport({ chat }) {
         apiKey: env.googleGenAiApiKey,
     });
 
-    const prompt = `You are an expert emotional intelligence analyst and personnel wellness coach. Your task is to carefully read the following personal journal entry and extract rich emotional, behavioural, stress, and wellness risk insights from it.
+    const prompt = `You are an expert occupational wellness analyst supporting a personnel welfare monitoring system. Your task is to carefully read the following personal journal entry and extract emotional, behavioural, stress, fatigue, and welfare-risk insights from it — as patterns only, never as a diagnosis.
 
 Analyse writing style, vocabulary, described events, explicit and implicit feelings, stress and fatigue cues. Scores MUST be integers between 0 and 100. Provide an objective risk_level (normal, elevated, high, critical) focusing on burnout and occupational stress indicators (non-diagnostic).
 
@@ -137,11 +137,13 @@ async function generateGlobalInsights({ entriesText }) {
         apiKey: env.googleGenAiApiKey,
     });
 
-    const prompt = `You are an expert psychological and behavioral analyst with a deep understanding of journaling patterns, emotional intelligence, and personnel wellness. Analyse the following sequence of the user's last 15 journal entries holistically.
+    const prompt = `You are an expert occupational wellness and behavioral analyst specializing in stress, fatigue, and burnout patterns in high-stress professional environments. Analyse the following sequence of the user's last 15 journal entries holistically.
 
 Your goals:
-1. Identify exactly 4 high-level, relatable observations about recurring patterns, emotional cycles, feeling shifts, behavioural loops, or correlations between their mood and past activities.
-2. Provide exactly 4 highly personalized, actionable advice cards grounded in the actual emotions and behaviours you see — not generic wellness advice.
+1. Identify exactly 4 high-level, relatable observations about recurring stress/fatigue patterns, emotional cycles, workload-linked mood shifts, or sleep-related trends — grounded in what the entries actually show, not generic statements.
+2. Provide exactly 4 highly personalized, non-clinical welfare recommendations grounded in the actual stress, fatigue, and mood signals you see — never generic productivity advice, and never a medical or diagnostic suggestion.
+
+Frame everything as welfare support, not performance coaching. Do not diagnose or imply any medical/psychological condition.
 
 Journal Entries:
 ${entriesText}`;

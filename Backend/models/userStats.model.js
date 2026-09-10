@@ -36,6 +36,10 @@ const userStatsSchema = new mongoose.Schema({
         enum: ["normal", "elevated", "high", "critical"],
         default: "normal"
     },
+    avgSleepHours: {
+        type: Number,
+        default: null
+    },
     lastEntryDate: {
         type: Date,
         default: null

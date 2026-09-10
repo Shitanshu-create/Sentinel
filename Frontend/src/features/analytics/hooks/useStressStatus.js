@@ -15,10 +15,10 @@ export function useStressStatus(entries, statsData) {
   }, [entries, statsData]);
 
   const stressCategory = useMemo(() => {
-    if (currentStress >= 75) return { label: 'High Stress Alert', color: 'var(--accent-rose)', badge: 'Critical' };
-    if (currentStress >= 55) return { label: 'Elevated Pressure', color: 'var(--accent-amber)', badge: 'Elevated' };
-    if (currentStress >= 35) return { label: 'Moderate Workload', color: 'var(--primary)', badge: 'Moderate' };
-    return { label: 'Optimal Recovery', color: 'var(--accent-green)', badge: 'Optimal' };
+    if (currentStress >= 75) return { label: 'High Stress Alert', color: 'var(--color-danger)', badge: 'Critical' };
+    if (currentStress >= 55) return { label: 'Elevated Pressure', color: 'var(--color-warning)', badge: 'Elevated' };
+    if (currentStress >= 35) return { label: 'Moderate Workload', color: 'var(--color-accent)', badge: 'Moderate' };
+    return { label: 'Optimal Recovery', color: 'var(--color-success)', badge: 'Optimal' };
   }, [currentStress]);
 
   return { currentStress, stressCategory };
