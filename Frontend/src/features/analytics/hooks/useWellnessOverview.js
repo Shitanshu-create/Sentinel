@@ -2,13 +2,19 @@ import { useMemo } from 'react';
 
 export function useWellnessOverview({ currentStress, stressCategory, riskMeta, statsData, overallWellnessScore, entries }) {
   const overview = useMemo(() => {
-    const rawMood = statsData?.avgMoodScore ? statsData.avgMoodScore / 10 : 7.2;
+    const hasEntries = Boolean(entries && entries.length > 0);
+
+    const rawMood = hasEntries && statsData?.avgMoodScore
+      ? statsData.avgMoodScore / 10
+      : 0;
     const moodVal = `${rawMood.toFixed(1)}/10`;
 
-    const sleepNum = statsData?.avgSleepHours ?? 7.1;
+    const sleepNum = hasEntries && statsData?.avgSleepHours !== null && statsData?.avgSleepHours !== undefined
+      ? statsData.avgSleepHours
+      : 0;
     const sleepVal = `${Number(sleepNum).toFixed(1)} hrs`;
 
-    const stressVal = `${currentStress ?? 30}/100`;
+    const stressVal = `${currentStress ?? 0}/100`;
     const riskVal = riskMeta?.badge || riskMeta?.title?.replace(' Level', '')?.replace(' Status', '') || 'Normal';
 
     // Status label & color
@@ -16,18 +22,20 @@ export function useWellnessOverview({ currentStress, stressCategory, riskMeta, s
     let statusColor = 'var(--color-success)';
     let summary = 'Personnel wellness indicators are balanced. Standard operational readiness maintained.';
 
-    if (currentStress >= 75 || riskMeta?.title?.includes('Critical')) {
-      statusLabel = 'Critical';
-      statusColor = 'var(--color-danger)';
-      summary = 'Sustained severe fatigue and stress detected. Recommend immediate rest and welfare review.';
-    } else if (currentStress >= 55 || riskMeta?.title?.includes('High')) {
-      statusLabel = 'Elevated';
-      statusColor = 'var(--color-warning)';
-      summary = 'Elevated stress trends observed over consecutive duty shifts. Preemptive intervention advised.';
-    } else if (currentStress >= 40 || riskMeta?.title?.includes('Elevated')) {
-      statusLabel = 'Moderate';
-      statusColor = 'var(--color-warning)';
-      summary = 'Mild fatigue cues present. Monitor workload schedule and ensure routine rest cycles.';
+    if (hasEntries) {
+      if (currentStress >= 75 || riskMeta?.title?.includes('Critical')) {
+        statusLabel = 'Critical';
+        statusColor = 'var(--color-danger)';
+        summary = 'Sustained severe fatigue and stress detected. Recommend immediate rest and welfare review.';
+      } else if (currentStress >= 55 || riskMeta?.title?.includes('High')) {
+        statusLabel = 'Elevated';
+        statusColor = 'var(--color-warning)';
+        summary = 'Elevated stress trends observed over consecutive duty shifts. Preemptive intervention advised.';
+      } else if (currentStress >= 40 || riskMeta?.title?.includes('Elevated')) {
+        statusLabel = 'Moderate';
+        statusColor = 'var(--color-warning)';
+        summary = 'Mild fatigue cues present. Monitor workload schedule and ensure routine rest cycles.';
+      }
     }
 
     const tiles = [
@@ -35,7 +43,7 @@ export function useWellnessOverview({ currentStress, stressCategory, riskMeta, s
         id: 'mood',
         label: 'Mood Index',
         value: moodVal,
-        delta: '+0.3 vs baseline',
+        delta: hasEntries ? '+0.3 vs baseline' : '0.0 vs baseline',
         deltaPositive: true,
         color: 'var(--color-success)',
         iconName: 'Smile'
@@ -44,8 +52,8 @@ export function useWellnessOverview({ currentStress, stressCategory, riskMeta, s
         id: 'sleep',
         label: 'Sleep Average',
         value: sleepVal,
-        delta: sleepNum >= 7 ? '+0.4 hrs target' : '-0.8 hrs deficit',
-        deltaPositive: sleepNum >= 7,
+        delta: hasEntries ? (sleepNum >= 7 ? '+0.4 hrs target' : '-0.8 hrs deficit') : '0.0 hrs target',
+        deltaPositive: hasEntries ? sleepNum >= 7 : true,
         color: 'var(--color-accent)',
         iconName: 'Moon'
       },
@@ -53,8 +61,8 @@ export function useWellnessOverview({ currentStress, stressCategory, riskMeta, s
         id: 'stress',
         label: 'Stress & Fatigue',
         value: stressVal,
-        delta: currentStress < 50 ? '-4% low fatigue' : '+12% high strain',
-        deltaPositive: currentStress < 50,
+        delta: hasEntries ? (currentStress < 50 ? '-4% low fatigue' : '+12% high strain') : '0% stress recorded',
+        deltaPositive: true,
         color: stressCategory?.color || 'var(--color-warning)',
         iconName: 'Zap'
       },
@@ -73,7 +81,7 @@ export function useWellnessOverview({ currentStress, stressCategory, riskMeta, s
       statusLabel,
       statusColor,
       summary,
-      overallScore: Math.round(overallWellnessScore || 78),
+      overallScore: hasEntries ? Math.round(overallWellnessScore ?? 0) : 0,
       tiles
     };
   }, [currentStress, stressCategory, riskMeta, statsData, overallWellnessScore, entries]);

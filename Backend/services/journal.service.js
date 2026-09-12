@@ -1,6 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import env from "../config/env.js";
 import { sanitizeForPrompt } from "../utils/sanitize.js";
+import InsightsCache from "../models/insightsCache.model.js";
+import journalReportModel from "../models/journalReport.model.js";
 
 function safeParseGeminiResponse(text) {
     try {
@@ -160,6 +162,86 @@ ${entriesText}`;
     return safeParseGeminiResponse(response.text);
 }
 
+async function getOrGenerateInsights(userId, forceRefresh = false) {
+    const cachedInsights = await InsightsCache.findOne({ userId });
+
+    let entries = [];
+    try {
+        const query = journalReportModel.find({ userId, isPrivate: { $ne: true } });
+        if (query && typeof query.sort === 'function') {
+            const sorted = query.sort({ date: -1 });
+            entries = (await (typeof sorted?.limit === 'function' ? sorted.limit(15) : sorted)) || [];
+        } else if (Array.isArray(query)) {
+            entries = query;
+        } else if (query) {
+            entries = (await query) || [];
+        }
+    } catch (err) {
+        console.error("Query entries error in getOrGenerateInsights:", err);
+    }
+
+    const filteredEntries = entries.filter((en) => {
+        if (en.reflection && en.reflection.some((reflection) => reflection.includes("Private Entry"))) {
+            return false;
+        }
+        return true;
+    });
+
+    if (filteredEntries.length < 3) {
+        return { observations: [], welfareRecommendations: [] };
+    }
+
+    const latestEntry = filteredEntries[0];
+
+    // If cached insights exist in DB and not forcing a refresh:
+    // Check if new entries have been created since these insights were generated
+    if (cachedInsights && cachedInsights.data && !forceRefresh) {
+        const isUpToDate = Boolean(
+            cachedInsights.lastEntryDate
+            && latestEntry?.date
+            && new Date(cachedInsights.lastEntryDate).getTime() >= new Date(latestEntry.date).getTime()
+        ) || Boolean(
+            cachedInsights.lastEntryId
+            && latestEntry?._id
+            && String(cachedInsights.lastEntryId) === String(latestEntry._id)
+        );
+
+        // If up to date, or if cached insights already exist in DB, return them without calling Gemini
+        if (isUpToDate || cachedInsights.lastGenerated) {
+            return cachedInsights.data;
+        }
+    }
+
+    // Generate new insights from Gemini only when a new entry was created or forceRefresh is true
+    const entriesText = filteredEntries.map((en, i) => {
+        return `Entry ${i + 1} (${en.date.toDateString()}):\nTitle: ${sanitizeForPrompt(en.title)}\nContent: ${sanitizeForPrompt(en.chat)}\nReflections: ${en.reflection ? en.reflection.join(', ') : ''}`;
+    }).join('\n\n---\n\n');
+
+    let insights;
+    try {
+        insights = await generateGlobalInsights({ entriesText });
+    } catch (err) {
+        console.error("Gemini Global Insights Error:", err);
+        if (cachedInsights?.data) {
+            return cachedInsights.data;
+        }
+        return { observations: [], welfareRecommendations: [] };
+    }
+
+    await InsightsCache.findOneAndUpdate(
+        { userId },
+        { 
+            data: insights, 
+            lastGenerated: new Date(), 
+            lastEntryId: latestEntry?._id,
+            lastEntryDate: latestEntry?.date,
+            privacyVersion: 1 
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
+
+    return insights;
+}
 
 export default generateJournalReport;
-export { generateGlobalInsights };
+export { generateGlobalInsights, getOrGenerateInsights };

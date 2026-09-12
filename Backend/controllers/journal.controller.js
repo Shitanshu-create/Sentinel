@@ -1,4 +1,4 @@
-import generateJournalReport, { generateGlobalInsights } from "../services/journal.service.js";
+import generateJournalReport, { generateGlobalInsights, getOrGenerateInsights } from "../services/journal.service.js";
 import journalReportModel from "../models/journalReport.model.js";
 import UserStats from "../models/userStats.model.js";
 import InsightsCache from "../models/insightsCache.model.js";
@@ -72,8 +72,13 @@ async function generateJournalReportController(req, res) {
             gemini_response: journalReportByAi.gemini_response
         });
 
-        await InsightsCache.deleteOne({ userId: req.user.Id });
         await recalculateUserStats(req.user.Id);
+
+        try {
+            await getOrGenerateInsights(req.user.Id, true);
+        } catch (insightsErr) {
+            console.error("Failed to generate insights on new journal entry:", insightsErr);
+        }
 
         res.status(201).json({
             message: "Journal report generated successfully",
@@ -146,63 +151,9 @@ async function getUserStatsController(req, res) {
  */
 async function getGlobalInsightsController(req, res) {
     try {
-        const userId = req.user.Id;
-
-        // 1. Check Cache first
-        const cachedInsights = await InsightsCache.findOne({ userId });
-        const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
-
-        if (
-            cachedInsights
-            && cachedInsights.privacyVersion === 1
-            && (Date.now() - new Date(cachedInsights.lastGenerated).getTime() < CACHE_DURATION)
-        ) {
-            return res.status(200).json({
-                message: "Insights retrieved from cache",
-                insights: cachedInsights.data
-            });
-        }
-
-        // 2. No Cache or Expired - Fetch Last 15 AI-allowed Entries
-        const entries = await journalReportModel.find({ userId, isPrivate: { $ne: true } })
-            .sort({ date: -1 })
-            .limit(15);
-
-        const filteredEntries = entries.filter((en) => {
-            if (en.reflection && en.reflection.some((reflection) => reflection.includes("Private Entry"))) {
-                return false;
-            }
-            return true;
-        });
-
-        if (filteredEntries.length < 3) {
-            return res.status(200).json({
-                message: "Not enough entries for deep analysis yet",
-                insights: { observations: [], welfareRecommendations: [] }
-            });
-        }
-
-        // 3. Prepare text for AI
-        const entriesText = filteredEntries.map((en, i) => {
-            return `Entry ${i+1} (${en.date.toDateString()}):\nTitle: ${sanitizeForPrompt(en.title)}\nContent: ${sanitizeForPrompt(en.chat)}\nReflections: ${en.reflection.join(', ')}`;
-        }).join('\n\n---\n\n');
-
-        // 4. Generate New Insights
-        const insights = await generateGlobalInsights({ entriesText });
-
-        // 5. Update/Save Cache atomically to avoid duplicate-key races
-        await InsightsCache.findOneAndUpdate(
-            { userId },
-            {
-                data: insights,
-                lastGenerated: Date.now(),
-                privacyVersion: 1
-            },
-            { upsert: true, new: true, setDefaultsOnInsert: true }
-        );
-        
+        const insights = await getOrGenerateInsights(req.user.Id);
         res.status(200).json({
-            message: "Insights generated successfully",
+            message: "Insights retrieved successfully",
             insights
         });
     } catch (error) {
@@ -224,8 +175,13 @@ async function deleteJournalController(req, res) {
             return res.status(404).json({ message: "Journal entry not found or unauthorized to delete." });
         }
 
-        await InsightsCache.deleteOne({ userId: req.user.Id });
         await recalculateUserStats(req.user.Id);
+
+        try {
+            await getOrGenerateInsights(req.user.Id, true);
+        } catch (insightsErr) {
+            console.error("Failed to update insights on journal delete:", insightsErr);
+        }
         
         res.status(200).json({ message: "Journal entry deleted successfully" });
     } catch (error) {
@@ -281,8 +237,13 @@ async function modifyJournalController(req, res) {
         existingEntry.isPrivate = isPrivate;
 
         await existingEntry.save();
-        await InsightsCache.deleteOne({ userId: req.user.Id });
         await recalculateUserStats(req.user.Id);
+
+        try {
+            await getOrGenerateInsights(req.user.Id, true);
+        } catch (insightsErr) {
+            console.error("Failed to update insights on journal update:", insightsErr);
+        }
 
         res.status(200).json({
             message: "Journal modified successfully",

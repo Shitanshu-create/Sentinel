@@ -4,6 +4,8 @@
   border: 3px solid var(--color-ink);
   background: var(--color-surface);
   box-shadow: 7px 7px 0 var(--color-ink);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .auth-sketch-card::before,
@@ -48,7 +50,8 @@
 
 .auth-wrapper {
   width: 100%;
-  max-width: 32rem;
+  max-width: 38rem;
+  box-sizing: border-box;
 }
 
 .auth-back-btn {
@@ -73,12 +76,13 @@
 }
 
 .auth-card-padding {
-  padding: 1rem;
+  padding: 1.25rem 1rem;
+  box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
   .auth-card-padding {
-    padding: 1.25rem;
+    padding: 1.5rem 1.5rem;
   }
 }
 
@@ -119,7 +123,9 @@
 
 .auth-form {
   display: grid;
-  gap: 0.75rem;
+  gap: 0.875rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .auth-label {
@@ -127,6 +133,9 @@
   gap: 0.375rem;
   font-size: 0.75rem;
   font-weight: 900;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .auth-hint {
@@ -145,21 +154,68 @@
   text-align: center;
   font-size: 0.75rem;
   font-weight: 900;
+  box-sizing: border-box;
 }
 
 .auth-input {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
   border-radius: 1rem;
   border: 3px solid var(--color-ink);
   background-color: var(--color-surface);
-  padding: 0.5rem 0.75rem;
+  padding: 0.55rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 700;
   outline: none;
-  transition: background-color 150ms ease;
+  transition: background-color 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
 }
 
 .auth-input:focus {
   background-color: color-mix(in srgb, var(--color-warning) 30%, transparent);
+}
+
+select.auth-input {
+  cursor: pointer;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+  padding-right: 2.25rem;
+}
+
+select.auth-input optgroup {
+  font-weight: 900 !important;
+  font-style: normal !important;
+  color: #0f172a !important;
+  background-color: #ede8dc !important;
+  font-size: 0.8125rem !important;
+  letter-spacing: 0.04em !important;
+  padding: 6px 4px !important;
+}
+
+select.auth-input option {
+  font-weight: 600 !important;
+  font-style: normal !important;
+  color: #1f2937 !important;
+  background-color: #fdfbf6 !important;
+  padding: 6px 10px !important;
+}
+
+select.auth-input option:disabled,
+select.auth-input option[value=""] {
+  color: var(--color-text-muted, #64748b) !important;
+  font-weight: 700 !important;
 }
 
 .auth-submit-btn {
@@ -344,12 +400,14 @@
 .auth-form-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.75rem;
+  gap: 0.875rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-@media (min-width: 480px) {
+@media (min-width: 580px) {
   .auth-form-row {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -357,11 +415,15 @@
   display: flex;
   gap: 0.75rem;
   margin-top: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .auth-button-group .auth-submit-btn,
 .auth-button-group .auth-secondary-btn {
   flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .auth-secondary-btn {
@@ -384,5 +446,40 @@
 .auth-secondary-btn:hover {
   transform: translateY(-0.125rem);
   background-color: var(--color-bg-grid);
+}
+
+.auth-role-select {
+  margin-bottom: 1.25rem;
+}
+
+.auth-role-options {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.auth-role-btn {
+  flex: 1;
+  padding: 0.625rem 0.75rem;
+  border-radius: 1rem;
+  border: 3px solid var(--color-ink);
+  background-color: var(--color-surface);
+  font-size: 0.8125rem;
+  font-weight: 900;
+  color: var(--color-ink);
+  box-shadow: 3px 3px 0 var(--color-ink);
+  cursor: pointer;
+  transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.auth-role-btn:hover {
+  transform: translateY(-0.125rem);
+  background-color: var(--color-bg-grid);
+}
+
+.auth-role-btn-active {
+  background-color: var(--color-accent);
+  box-shadow: 4px 4px 0 var(--color-ink);
+  transform: translateY(-0.125rem);
 }
 

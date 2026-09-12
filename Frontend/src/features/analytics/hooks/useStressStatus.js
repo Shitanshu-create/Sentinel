@@ -2,16 +2,18 @@ import { useMemo } from 'react';
 
 export function useStressStatus(entries, statsData) {
   const currentStress = useMemo(() => {
-    if (statsData?.currentStressStatus !== undefined && statsData?.currentStressStatus !== 0) {
+    if (!entries || entries.length === 0) {
+      return statsData?.currentStressStatus ?? 0;
+    }
+    if (statsData?.currentStressStatus !== undefined && statsData?.currentStressStatus !== null) {
       return statsData.currentStressStatus;
     }
-    if (!entries || entries.length === 0) return 30;
     const entriesWithStress = entries.filter((e) => e.raw?.gemini_response?.stress_score !== undefined);
     if (entriesWithStress.length > 0) {
       const sum = entriesWithStress.reduce((acc, curr) => acc + (curr.raw.gemini_response.stress_score || 0), 0);
       return Math.round(sum / entriesWithStress.length);
     }
-    return 30;
+    return 0;
   }, [entries, statsData]);
 
   const stressCategory = useMemo(() => {

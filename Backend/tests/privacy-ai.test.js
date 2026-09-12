@@ -7,10 +7,14 @@ const find = vi.fn();
 const deleteOne = vi.fn();
 const recalculateUserStats = vi.fn();
 
-vi.mock("../services/journal.service.js", () => ({
-    default: generateJournalReport,
-    generateGlobalInsights
-}));
+vi.mock("../services/journal.service.js", async (importOriginal) => {
+    const actual = await importOriginal();
+    return {
+        ...actual,
+        default: generateJournalReport,
+        generateGlobalInsights
+    };
+});
 
 vi.mock("../models/journalReport.model.js", () => ({
     default: { create, find }

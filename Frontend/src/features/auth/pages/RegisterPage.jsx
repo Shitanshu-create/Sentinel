@@ -47,6 +47,7 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
     username: '',
     password: ''
   });
+  const [role, setRole] = useState('personnel');
 
   const handleNextStep1 = () => {
     setError(null);
@@ -97,7 +98,8 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
       personalDetails: valStep1.values,
       serviceDetails: validateStep2ServiceDetails(serviceDetails).values,
       currentStatus: validateStep3CurrentStatus(currentStatus).values,
-      loginCredentials: valStep4.values
+      loginCredentials: valStep4.values,
+      role
     };
 
     setLoading(true);
@@ -105,7 +107,7 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
     setLoading(false);
 
     if (res.success) {
-      onRegisterSuccess();
+      onRegisterSuccess(res.user);
     } else {
       setError(res.message || "Registration failed");
     }
@@ -170,6 +172,8 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
             <LoginCredentialsStep
               data={loginCredentials}
               updateData={(fields) => setLoginCredentials((prev) => ({ ...prev, ...fields }))}
+              role={role}
+              setRole={setRole}
               onSubmit={handleFinalSubmit}
               onBack={() => setCurrentStep(3)}
               loading={loading}

@@ -15,6 +15,13 @@ const insightsCacheSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    lastEntryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'JournalReport'
+    },
+    lastEntryDate: {
+        type: Date
+    },
     privacyVersion: {
         type: Number,
         default: 1

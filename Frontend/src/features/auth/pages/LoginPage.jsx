@@ -40,7 +40,7 @@ function Login({ onBack, onOpenRegister, onLoginSuccess }) {
     const res = await handleLogin(validation.values);
     setLoading(false);
     if (res.success) {
-      onLoginSuccess();
+      onLoginSuccess(res.user);
     } else {
       setError(res.message || "Invalid email or password");
     }

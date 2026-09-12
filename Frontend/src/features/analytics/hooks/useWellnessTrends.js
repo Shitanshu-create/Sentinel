@@ -7,12 +7,12 @@ function extractEntryMetrics(entry) {
   const gr = entry.raw?.gemini_response || {};
   // Mood composite: 0-100 normalized to 0-10
   // calmness (pos) + happiness (pos) + (100 - anxiety) + (100 - sadness)
-  let moodScore = 70;
+  let moodScore = 0;
   if (gr.calmness_score !== undefined || gr.happiness_score !== undefined) {
-    const calmness = gr.calmness_score ?? 60;
-    const happiness = gr.happiness_score ?? 60;
-    const anxiety = gr.anxious_score ?? 30;
-    const sadness = gr.sadness_score ?? 20;
+    const calmness = gr.calmness_score ?? 50;
+    const happiness = gr.happiness_score ?? 50;
+    const anxiety = gr.anxious_score ?? 0;
+    const sadness = gr.sadness_score ?? 0;
     moodScore = (calmness + happiness + (100 - anxiety) + (100 - sadness)) / 4;
   }
   const mood = Math.round((moodScore / 10) * 10) / 10;
@@ -24,7 +24,7 @@ function extractEntryMetrics(entry) {
     : null;
 
   // Stress: 0-100 normalized to 0-10
-  const rawStress = gr.stress_score ?? gr.anxious_score ?? 30;
+  const rawStress = gr.stress_score ?? gr.anxious_score ?? 0;
   const stress = Math.min(10, Math.max(0, Math.round((Number(rawStress) / 10) * 10) / 10));
 
   return { mood, sleep, stress };
@@ -58,10 +58,21 @@ export function useWellnessTrends(entries, range = '30D') {
 
     const validEntries = (entries || []).filter(e => e.raw?.date);
 
-    // Default fallbacks if no entries exist
-    let lastMood = 7.0;
-    let lastSleep = 7.0;
-    let lastStress = 3.2;
+    if (validEntries.length === 0) {
+      return {
+        trendData: {
+          mood: Array(labels.length).fill(0),
+          sleep: Array(labels.length).fill(0),
+          stress: Array(labels.length).fill(0)
+        },
+        labels
+      };
+    }
+
+    // Default fallbacks initialized to 0
+    let lastMood = 0;
+    let lastSleep = 0;
+    let lastStress = 0;
 
     const moodList = [];
     const sleepList = [];
@@ -103,7 +114,6 @@ export function useWellnessTrends(entries, range = '30D') {
         sleepList.push(bucketSleep);
         stressList.push(bucketStress);
       } else {
-        // Carry forward slightly varied baseline so chart is smooth and informative
         moodList.push(lastMood);
         sleepList.push(lastSleep);
         stressList.push(lastStress);

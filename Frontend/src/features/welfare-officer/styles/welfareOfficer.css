@@ -1,0 +1,589 @@
+/* ── Officer Dashboard & Detail Layout ── */
+.officer-page-container {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+.officer-flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.officer-section {
+  min-width: 0;
+  flex: 1 1 0%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 3rem;
+  transition: margin 300ms ease;
+}
+
+@media (min-width: 640px) {
+  .officer-section {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .officer-section {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 499px) {
+  .officer-section {
+    padding-bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+.officer-content-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.officer-page-title {
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--color-text-strong);
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+/* ── Unit Summary Panel ── */
+.unit-summary-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.unit-summary-header {
+  margin-bottom: 1.25rem;
+}
+
+.unit-summary-sub {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.unit-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .unit-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .unit-summary-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+.unit-summary-stat {
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: background-color 150ms ease;
+}
+
+.unit-summary-stat:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.unit-stat-value {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.unit-stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* ── Roster Table & Toolbar ── */
+.roster-table-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+  overflow: hidden;
+}
+
+.roster-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-strong);
+}
+
+@media (min-width: 640px) {
+  .roster-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.roster-search-box {
+  position: relative;
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.roster-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-faint);
+  pointer-events: none;
+}
+
+.roster-search-input {
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.roster-search-input:focus {
+  border-color: var(--color-accent);
+}
+
+.roster-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.roster-filter-icon {
+  color: var(--color-text-faint);
+}
+
+.roster-filter-select {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  outline: none;
+  cursor: pointer;
+}
+
+.roster-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.roster-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.125rem 1.25rem;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  color: inherit;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.roster-row:last-child {
+  border-bottom: none;
+}
+
+.roster-row:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.roster-row-main {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.roster-row-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.roster-row-meta {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+.roster-row-metrics {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-shrink: 0;
+}
+
+.roster-metric-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.roster-metric-chip-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-text-faint);
+  letter-spacing: 0.05em;
+}
+
+.roster-metric-chip-val {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+}
+
+.roster-risk-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid currentColor;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.roster-row-arrow {
+  color: var(--color-text-faint);
+  transition: transform 150ms ease;
+}
+
+.roster-row:hover .roster-row-arrow {
+  transform: translateX(3px);
+  color: var(--color-accent);
+}
+
+.roster-no-match {
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.roster-empty-panel {
+  text-align: center;
+}
+
+/* ── Personnel Detail Page Header ── */
+.personnel-header-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.personnel-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.personnel-back-btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.personnel-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.personnel-avatar-badge {
+  height: 3.75rem;
+  width: 3.75rem;
+  border-radius: 1rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  display: grid;
+  place-items: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.personnel-profile-info {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.personnel-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.personnel-profile-name {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.personnel-rank-pill {
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  background: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.personnel-meta-grid {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.65rem;
+}
+
+.personnel-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.personnel-meta-item .meta-icon {
+  color: var(--color-text-faint);
+}
+
+/* ── Welfare Notes Panel ── */
+.welfare-notes-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.welfare-notes-header {
+  margin-bottom: 1.25rem;
+}
+
+.welfare-notes-sub {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.welfare-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.welfare-note-card {
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  transition: background-color 150ms ease;
+}
+
+.welfare-note-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.welfare-note-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.welfare-note-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+}
+
+.welfare-note-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-soft);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.welfare-notes-empty {
+  padding: 1rem 0;
+}
+
+/* ── Add Note Form Panel ── */
+.add-note-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.add-note-header {
+  margin-bottom: 1rem;
+}
+
+.add-note-sub {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.add-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-note-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+  margin-bottom: 0.4rem;
+}
+
+.add-note-select {
+  width: 100%;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  outline: none;
+}
+
+.add-note-select:focus {
+  border-color: var(--color-accent);
+}
+
+.add-note-textarea {
+  width: 100%;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  outline: none;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.add-note-textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.add-note-error {
+  color: var(--color-danger);
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.add-note-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-note-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-accent-strong);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.add-note-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.add-note-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

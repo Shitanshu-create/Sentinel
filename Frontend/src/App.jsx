@@ -13,6 +13,8 @@ const ChatPage = lazy(() => import('./features/ai-chat/pages/ChatPage.jsx'));
 const Login = lazy(() => import('./features/auth/pages/LoginPage.jsx'));
 const Register = lazy(() => import('./features/auth/pages/RegisterPage.jsx'));
 const WritingPage = lazy(() => import('./features/writing/pages/WritingPage.jsx'));
+const WelfareOfficerDashboardPage = lazy(() => import('./features/welfare-officer/pages/WelfareOfficerDashboardPage.jsx'));
+const PersonnelDetailPage = lazy(() => import('./features/welfare-officer/pages/PersonnelDetailPage.jsx'));
 
 function LoadingScreen() {
   return (
@@ -78,11 +80,11 @@ function App() {
             path="/login"
             element={
               isLoggedIn ? (
-                <Navigate to="/journal" replace />
+                <Navigate to={user?.role === 'welfare_officer' ? '/welfare-officer' : '/journal'} replace />
               ) : (
                 <Login
                   onBack={() => navigate('/')}
-                  onLoginSuccess={() => navigate('/journal')}
+                  onLoginSuccess={(loggedUser) => navigate(loggedUser?.role === 'welfare_officer' ? '/welfare-officer' : '/journal')}
                   onOpenRegister={() => navigate('/signup')}
                 />
               )
@@ -92,11 +94,11 @@ function App() {
             path="/signup"
             element={
               isLoggedIn ? (
-                <Navigate to="/journal" replace />
+                <Navigate to={user?.role === 'welfare_officer' ? '/welfare-officer' : '/journal'} replace />
               ) : (
                 <Register
                   onBack={() => navigate('/')}
-                  onRegisterSuccess={() => navigate('/journal')}
+                  onRegisterSuccess={(registeredUser) => navigate(registeredUser?.role === 'welfare_officer' ? '/welfare-officer' : '/journal')}
                   onOpenLogin={() => navigate('/login')}
                 />
               )
@@ -143,6 +145,22 @@ function App() {
                   entries={entries}
                   onSelectEntry={openEntryInJournal}
                 />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/welfare-officer"
+            element={
+              <ProtectedRoute allowedRoles={['welfare_officer', 'commander', 'admin']}>
+                <WelfareOfficerDashboardPage onLogout={logoutUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/welfare-officer/personnel/:id"
+            element={
+              <ProtectedRoute allowedRoles={['welfare_officer', 'commander', 'admin']}>
+                <PersonnelDetailPage onLogout={logoutUser} />
               </ProtectedRoute>
             }
           />

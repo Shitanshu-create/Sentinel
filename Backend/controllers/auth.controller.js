@@ -69,7 +69,8 @@ async function registerUserController(req, res, next) {
         const token = jwt.sign(
             {
                 Id: newUser._id,
-                username: newUser.username
+                username: newUser.username,
+                role: newUser.role
             },
             env.jwtSecret,
             { expiresIn: "1d" }
@@ -141,7 +142,7 @@ async function loginUserController(req, res, next) {
         }
 
         const token = jwt.sign(
-            { Id: user._id, username: user.username },
+            { Id: user._id, username: user.username, role: user.role },
             env.jwtSecret,
             { expiresIn: "1d" }
         );
@@ -151,7 +152,7 @@ async function loginUserController(req, res, next) {
         res.status(200).json(
             {
                 message: "User logged in successfully",
-                user: { id: user._id, username: user.username, email: user.email },
+                user: { id: user._id, username: user.username, email: user.email, role: user.role },
             }
         );
     } catch (error) {

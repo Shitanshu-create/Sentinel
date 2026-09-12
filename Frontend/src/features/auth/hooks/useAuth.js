@@ -13,7 +13,7 @@ export const useAuth = () => {
                 sessionStorage.clear();
                 setUser(res.user);
                 fetchObservations().catch(err => console.error("Prefetch failed", err));
-                return { success: true };
+                return { success: true, user: res.user };
             }
             return { success: false, message: res.message };
         } catch (err) {
@@ -29,7 +29,7 @@ export const useAuth = () => {
                 sessionStorage.clear();
                 setUser(res.user);
                 fetchObservations().catch(err => console.error("Prefetch failed", err));
-                return { success: true };
+                return { success: true, user: res.user };
             }
             return { success: false, message: res.message };
         } catch (err) {

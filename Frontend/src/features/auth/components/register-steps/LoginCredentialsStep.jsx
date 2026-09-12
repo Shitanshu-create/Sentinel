@@ -2,7 +2,7 @@ import React from 'react';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import { AUTH_RULES } from '../../utils/authValidation.js';
 
-export function LoginCredentialsStep({ data, updateData, onSubmit, onBack, loading }) {
+export function LoginCredentialsStep({ data, updateData, role = 'personnel', setRole, onSubmit, onBack, loading }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit();
@@ -10,6 +10,25 @@ export function LoginCredentialsStep({ data, updateData, onSubmit, onBack, loadi
 
   return (
     <form className="auth-form" onSubmit={handleSubmit} noValidate>
+      <div className="auth-role-select">
+        <label className="auth-label">Account Type</label>
+        <div className="auth-role-options">
+          <button
+            type="button"
+            className={`auth-role-btn ${role === 'personnel' ? 'auth-role-btn-active' : ''}`}
+            onClick={() => setRole?.('personnel')}
+          >
+            Personnel
+          </button>
+          <button
+            type="button"
+            className={`auth-role-btn ${role === 'welfare_officer' ? 'auth-role-btn-active' : ''}`}
+            onClick={() => setRole?.('welfare_officer')}
+          >
+            Welfare Officer
+          </button>
+        </div>
+      </div>
       <label className="auth-label">
         Choose Username *
         <input
