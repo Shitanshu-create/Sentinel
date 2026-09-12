@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import journalRouter from "./routes/journal.route.js";
 import welfareOfficerRouter from "./routes/welfareOfficer.routes.js";
+import commandingOfficerRouter from "./routes/commandingOfficer.routes.js";
 import env from "./config/env.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -84,6 +85,7 @@ app.use(csrfProtection);
 app.use("/api/auth", authRouter);
 app.use("/api/journal", journalRouter);
 app.use("/api/welfare-officer", welfareOfficerRouter);
+app.use("/api/commanding-officer", commandingOfficerRouter);
 app.use(notFoundHandler);
 app.use(errorHandler);
 

@@ -27,6 +27,13 @@ export function LoginCredentialsStep({ data, updateData, role = 'personnel', set
           >
             Welfare Officer
           </button>
+          <button
+            type="button"
+            className={`auth-role-btn ${role === 'commander' ? 'auth-role-btn-active' : ''}`}
+            onClick={() => setRole?.('commander')}
+          >
+            Commanding Officer
+          </button>
         </div>
       </div>
       <label className="auth-label">

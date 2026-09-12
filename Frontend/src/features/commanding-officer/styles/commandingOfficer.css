@@ -1,0 +1,15 @@
+@import '../../welfare-officer/styles/welfareOfficer.css';
+
+/* Additional commander specific styling */
+.commander-dept-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface, #ffffff);
+  border: 2px solid var(--border-color, #1a1a1a);
+  border-radius: 9999px;
+  padding: 4px 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 2px 2px 0px var(--border-color, #1a1a1a);
+}

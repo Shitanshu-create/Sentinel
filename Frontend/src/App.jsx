@@ -15,6 +15,14 @@ const Register = lazy(() => import('./features/auth/pages/RegisterPage.jsx'));
 const WritingPage = lazy(() => import('./features/writing/pages/WritingPage.jsx'));
 const WelfareOfficerDashboardPage = lazy(() => import('./features/welfare-officer/pages/WelfareOfficerDashboardPage.jsx'));
 const PersonnelDetailPage = lazy(() => import('./features/welfare-officer/pages/PersonnelDetailPage.jsx'));
+const CommandDashboardPage = lazy(() => import('./features/commanding-officer/pages/CommandDashboardPage.jsx'));
+const UnitDetailPage = lazy(() => import('./features/commanding-officer/pages/UnitDetailPage.jsx'));
+
+const getDestinationForRole = (role) => {
+  if (role === 'commander') return '/commanding-officer';
+  if (role === 'welfare_officer') return '/welfare-officer';
+  return '/journal';
+};
 
 function LoadingScreen() {
   return (
@@ -80,11 +88,11 @@ function App() {
             path="/login"
             element={
               isLoggedIn ? (
-                <Navigate to={user?.role === 'welfare_officer' ? '/welfare-officer' : '/journal'} replace />
+                <Navigate to={getDestinationForRole(user?.role)} replace />
               ) : (
                 <Login
                   onBack={() => navigate('/')}
-                  onLoginSuccess={(loggedUser) => navigate(loggedUser?.role === 'welfare_officer' ? '/welfare-officer' : '/journal')}
+                  onLoginSuccess={(loggedUser) => navigate(getDestinationForRole(loggedUser?.role))}
                   onOpenRegister={() => navigate('/signup')}
                 />
               )
@@ -94,11 +102,11 @@ function App() {
             path="/signup"
             element={
               isLoggedIn ? (
-                <Navigate to={user?.role === 'welfare_officer' ? '/welfare-officer' : '/journal'} replace />
+                <Navigate to={getDestinationForRole(user?.role)} replace />
               ) : (
                 <Register
                   onBack={() => navigate('/')}
-                  onRegisterSuccess={(registeredUser) => navigate(registeredUser?.role === 'welfare_officer' ? '/welfare-officer' : '/journal')}
+                  onRegisterSuccess={(registeredUser) => navigate(getDestinationForRole(registeredUser?.role))}
                   onOpenLogin={() => navigate('/login')}
                 />
               )
@@ -161,6 +169,22 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['welfare_officer', 'commander', 'admin']}>
                 <PersonnelDetailPage onLogout={logoutUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/commanding-officer"
+            element={
+              <ProtectedRoute allowedRoles={['commander', 'admin']}>
+                <CommandDashboardPage onLogout={logoutUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/commanding-officer/units/:unitName"
+            element={
+              <ProtectedRoute allowedRoles={['commander', 'admin']}>
+                <UnitDetailPage onLogout={logoutUser} />
               </ProtectedRoute>
             }
           />

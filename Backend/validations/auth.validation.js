@@ -49,7 +49,7 @@ const registerSchema = z.object({
     serviceDetails: serviceDetailsSchema.optional(),
     currentStatus: currentStatusSchema.optional(),
     loginCredentials: loginCredentialsSchema.optional(),
-    role: z.enum(["personnel", "welfare_officer"]).optional().default("personnel"),
+    role: z.enum(["personnel", "welfare_officer", "commander"]).optional().default("personnel"),
     // Fallback flat fields
     username: z.string().trim().min(2, "Username must be at least 2 characters").max(60, "Username must be 60 characters or less").optional(),
     email: email.optional(),
