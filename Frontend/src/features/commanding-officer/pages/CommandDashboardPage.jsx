@@ -1,12 +1,12 @@
 import React from 'react';
 import CommandSidebar from '../components/CommandSidebar.jsx';
-import { DepartmentSummaryPanel } from '../components/DepartmentSummaryPanel.jsx';
+import { ForceSummaryPanel } from '../components/ForceSummaryPanel.jsx';
 import { UnitTable } from '../components/UnitTable.jsx';
 import { useUnitsSummary } from '../hooks/useUnitsSummary.js';
 import '../styles/commandingOfficer.css';
 
 export function CommandDashboardPage({ onLogout }) {
-  const { department, units, request, unitsRequest } = useUnitsSummary();
+  const { force, units, request, unitsRequest } = useUnitsSummary();
   const req = request || unitsRequest || { loading: false, error: null };
 
   return (
@@ -16,14 +16,14 @@ export function CommandDashboardPage({ onLogout }) {
         <section className="officer-section">
           <div className="officer-content-wrapper">
             <div>
-              <h1 className="officer-page-title">Department Command Headquarters</h1>
+              <h1 className="officer-page-title">Force Command Headquarters</h1>
               <p className="unit-summary-sub">
                 Aggregate unit operational readiness, systemic stress trends, and organizational posture
               </p>
             </div>
 
             {req.loading && (
-              <p className="obs-desc">Loading department units...</p>
+              <p className="obs-desc">Loading force units...</p>
             )}
 
             {req.error && (
@@ -34,7 +34,7 @@ export function CommandDashboardPage({ onLogout }) {
 
             {!req.loading && !req.error && (
               <>
-                <DepartmentSummaryPanel department={department} units={units} />
+                <ForceSummaryPanel force={force} units={units} />
                 <UnitTable units={units} />
               </>
             )}

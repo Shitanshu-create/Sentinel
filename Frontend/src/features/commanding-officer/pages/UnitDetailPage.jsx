@@ -25,6 +25,7 @@ export function UnitDetailPage({ onLogout }) {
 
   const {
     unit,
+    force,
     department,
     personnelCount,
     worstCaseRiskLevel,
@@ -32,6 +33,7 @@ export function UnitDetailPage({ onLogout }) {
     unitStats,
     notes,
     request,
+    detailRequest,
     reload
   } = useUnitDetail(unitName);
 
@@ -70,6 +72,7 @@ export function UnitDetailPage({ onLogout }) {
               <>
                 <UnitHeaderCard
                   unit={unit}
+                  force={force}
                   department={department}
                   personnelCount={personnelCount}
                   worstCaseRiskLevel={worstCaseRiskLevel}

@@ -11,7 +11,7 @@ function formatUnitEntry(backendEntry) {
 
 export function useUnitDetail(unitName) {
   const [unit, setUnit] = useState(null);
-  const [department, setDepartment] = useState(null);
+  const [force, setForce] = useState(null);
   const [personnelCount, setPersonnelCount] = useState(0);
   const [worstCaseRiskLevel, setWorstCaseRiskLevel] = useState('normal');
   const [unitStats, setUnitStats] = useState(null);
@@ -25,7 +25,7 @@ export function useUnitDetail(unitName) {
       setDetailRequest({ loading: true, error: null });
       const res = await fetchUnitDetail(unitName);
       setUnit(res.unit);
-      setDepartment(res.department);
+      setForce(res.force || res.department || null);
       setPersonnelCount(res.personnelCount || 0);
       setWorstCaseRiskLevel(res.stats?.wellnessRiskLevel || 'normal');
       setUnitStats(res.stats || null);
@@ -45,7 +45,8 @@ export function useUnitDetail(unitName) {
 
   return {
     unit,
-    department,
+    force,
+    department: force,
     personnelCount,
     worstCaseRiskLevel,
     unitStats,

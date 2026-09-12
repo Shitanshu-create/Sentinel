@@ -42,35 +42,7 @@ export function validateStep1PersonalDetails({ name, email, age, gender, phoneNo
   return { values: { name: cleanName, email: cleanEmail, age: age ? Number(age) : null, gender: gender || 'prefer_not_to_say', phoneNo: (phoneNo || '').trim() } };
 }
 
-export function validateStep2ServiceDetails(data) {
-  return {
-    values: {
-      rank: (data.rank || '').trim(),
-      role: (data.role || '').trim(),
-      unit: (data.unit || '').trim(),
-      department: (data.department || '').trim()
-    }
-  };
-}
-
-export function validateStep3CurrentStatus(data) {
-  if (data.estimatedWorkHours !== '' && data.estimatedWorkHours !== null && data.estimatedWorkHours !== undefined) {
-    const hours = Number(data.estimatedWorkHours);
-    if (isNaN(hours) || hours < 0 || hours > 24) {
-      return { message: 'Estimated daily work hours must be between 0 and 24' };
-    }
-  }
-  return {
-    values: {
-      postingLocation: (data.postingLocation || '').trim(),
-      estimatedWorkHours: data.estimatedWorkHours ? Number(data.estimatedWorkHours) : null,
-      lastLeaveDate: data.lastLeaveDate || null,
-      dutySchedule: (data.dutySchedule || '').trim()
-    }
-  };
-}
-
-export function validateStep4LoginCredentials({ username, password }) {
+export function validateStep2LoginCredentials({ username, password }) {
   const cleanUsername = (username || '').trim();
 
   if (!cleanUsername) return { message: 'Username is required' };
@@ -81,6 +53,22 @@ export function validateStep4LoginCredentials({ username, password }) {
   if (passwordError) return { message: passwordError };
 
   return { values: { username: cleanUsername, password } };
+}
+
+export const validateStep4LoginCredentials = validateStep2LoginCredentials;
+
+export function validateStep3ServiceSelection(data = {}, role = 'personnel') {
+  const values = { force: (data.force || '').trim() };
+
+  if (role === 'personnel' || role === 'welfare_officer') {
+    values.unit = (data.unit || '').trim();
+  }
+  if (role === 'personnel') {
+    values.rank = (data.rank || '').trim();
+    values.jobType = (data.jobType || '').trim();
+  }
+
+  return { values };
 }
 
 export function validateRegisterInput({ username, email, password }) {

@@ -1,8 +1,10 @@
-import React from 'react';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { AUTH_RULES } from '../../utils/authValidation.js';
 
 export function LoginCredentialsStep({ data, updateData, role = 'personnel', setRole, onSubmit, onBack, loading }) {
+  const [showPassword, setShowPassword] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit();
@@ -53,16 +55,26 @@ export function LoginCredentialsStep({ data, updateData, role = 'personnel', set
 
       <label className="auth-label">
         Secure Password *
-        <input
-          type="password"
-          value={data.password || ''}
-          onChange={(e) => updateData({ password: e.target.value })}
-          required
-          minLength={8}
-          maxLength={128}
-          placeholder="********"
-          className="auth-input"
-        />
+        <div className="auth-password-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={data.password || ''}
+            onChange={(e) => updateData({ password: e.target.value })}
+            required
+            minLength={8}
+            maxLength={128}
+            placeholder="********"
+            className="auth-input"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="auth-password-toggle"
+            aria-label={showPassword ? "Hide password" : "Show password"}
+          >
+            {showPassword ? <EyeOff size={18} strokeWidth={2.5} /> : <Eye size={18} strokeWidth={2.5} />}
+          </button>
+        </div>
         <span className="auth-hint">{AUTH_RULES.password}</span>
       </label>
 
@@ -72,7 +84,7 @@ export function LoginCredentialsStep({ data, updateData, role = 'personnel', set
           Back
         </button>
         <button type="submit" disabled={loading} className="auth-submit-btn">
-          {loading ? 'Creating Vault...' : 'Create Account'}
+          Next: Service Details
           <ArrowRight size={16} strokeWidth={3} />
         </button>
       </div>

@@ -31,7 +31,7 @@ export function AddOrgNoteForm({ unitName, onAdded }) {
     <Panel className="add-note-panel" padding="p-5">
       <div className="add-note-header">
         <h2 className="obs-title">Log Organizational Directive / Action</h2>
-        <p className="add-note-sub">Recorded directives are visible to commanding officers with departmental oversight</p>
+        <p className="add-note-sub">Recorded directives are visible to commanding officers with force-wide oversight</p>
       </div>
 
       <form onSubmit={handleSubmit} className="add-note-form">

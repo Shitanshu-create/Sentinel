@@ -21,7 +21,7 @@ async function seed() {
         passwordHash,
         role: "commander",
         personalDetails: { name: "Demo Commanding Officer" },
-        serviceDetails: { rank: "Commandant", department: "Operations" }
+        serviceDetails: { rank: "Commandant", force: "CRPF" }
     });
 
     console.log("Commanding officer created:", commander.username, commander.email);

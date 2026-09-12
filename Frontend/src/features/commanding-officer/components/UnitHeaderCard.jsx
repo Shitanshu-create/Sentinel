@@ -3,7 +3,7 @@ import { ArrowLeft, Shield, Users, Building, AlertTriangle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom';
 import { Panel } from '../../analytics/components/Panel.jsx';
 
-export function UnitHeaderCard({ unit, department, personnelCount, worstCaseRiskLevel }) {
+export function UnitHeaderCard({ unit, force, department, personnelCount, worstCaseRiskLevel }) {
   const navigate = useNavigate();
 
   const getRiskClass = (level) => {
@@ -51,7 +51,7 @@ export function UnitHeaderCard({ unit, department, personnelCount, worstCaseRisk
           <div className="personnel-meta-grid">
             <span className="personnel-meta-item">
               <Building size={14} className="meta-icon" />
-              {department || 'Department'}
+              {force || department || 'Force'}
             </span>
             <span className="personnel-meta-item">
               <Users size={14} className="meta-icon" />

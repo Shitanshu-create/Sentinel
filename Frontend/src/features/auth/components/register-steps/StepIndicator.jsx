@@ -2,9 +2,8 @@ import React from 'react';
 
 const STEPS = [
   { number: 1, title: 'Personal' },
-  { number: 2, title: 'Service' },
-  { number: 3, title: 'Status' },
-  { number: 4, title: 'Account' }
+  { number: 2, title: 'Account' },
+  { number: 3, title: 'Service' }
 ];
 
 export function StepIndicator({ currentStep, setStep }) {

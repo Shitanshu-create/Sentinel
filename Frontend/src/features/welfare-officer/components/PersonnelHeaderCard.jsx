@@ -9,7 +9,7 @@ export function PersonnelHeaderCard({ person }) {
   const name = person.personalDetails?.name || person.username || 'Personnel Profile';
   const rank = person.serviceDetails?.rank || '—';
   const unit = person.serviceDetails?.unit || 'Unassigned Unit';
-  const department = person.serviceDetails?.department || 'Operations';
+  const department = person.serviceDetails?.force || person.serviceDetails?.department || 'Operations';
   const posting = person.currentStatus?.postingLocation || 'Active Deployment';
   const duty = person.currentStatus?.dutySchedule || 'Standard Rotation';
   const hours = person.currentStatus?.estimatedWorkHours

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, LogIn } from 'lucide-react';
+import { ArrowRight, LogIn, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.js';
 import { validateLoginInput } from '../utils/authValidation.js';
 import { env } from '../../../config/env.js';
@@ -10,6 +10,7 @@ function Login({ onBack, onOpenRegister, onLoginSuccess }) {
   const { handleLogin } = useAuth();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -88,15 +89,25 @@ function Login({ onBack, onOpenRegister, onLoginSuccess }) {
 
             <label className="auth-label">
               Password
-              <input
-                type="password"
-                name="password"
-                required
-                minLength={8}
-                maxLength={128}
-                placeholder="********"
-                className="auth-input"
-              />
+              <div className="auth-password-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  required
+                  minLength={8}
+                  maxLength={128}
+                  placeholder="********"
+                  className="auth-input"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="auth-password-toggle"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} strokeWidth={2.5} /> : <Eye size={18} strokeWidth={2.5} />}
+                </button>
+              </div>
             </label>
 
             <button

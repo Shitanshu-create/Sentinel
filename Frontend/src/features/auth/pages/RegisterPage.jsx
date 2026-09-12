@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { ArrowRight, Feather, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth.js';
 import {
   validateStep1PersonalDetails,
-  validateStep2ServiceDetails,
-  validateStep3CurrentStatus,
-  validateStep4LoginCredentials
+  validateStep2LoginCredentials,
+  validateStep3ServiceSelection
 } from '../utils/authValidation.js';
 import { StepIndicator } from '../components/register-steps/StepIndicator.jsx';
 import { PersonalDetailsStep } from '../components/register-steps/PersonalDetailsStep.jsx';
-import { ServiceDetailsStep } from '../components/register-steps/ServiceDetailsStep.jsx';
-import { CurrentStatusStep } from '../components/register-steps/CurrentStatusStep.jsx';
 import { LoginCredentialsStep } from '../components/register-steps/LoginCredentialsStep.jsx';
+import { ServiceSelectionStep } from '../components/register-steps/ServiceSelectionStep.jsx';
 import { env } from '../../../config/env.js';
 import '../styles/auth.css';
 
@@ -29,25 +27,18 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
     phoneNo: ''
   });
 
-  const [serviceDetails, setServiceDetails] = useState({
-    rank: '',
-    role: '',
-    unit: '',
-    department: ''
-  });
-
-  const [currentStatus, setCurrentStatus] = useState({
-    postingLocation: '',
-    estimatedWorkHours: '',
-    lastLeaveDate: '',
-    dutySchedule: ''
-  });
-
   const [loginCredentials, setLoginCredentials] = useState({
     username: '',
     password: ''
   });
   const [role, setRole] = useState('personnel');
+
+  const [serviceDetails, setServiceDetails] = useState({
+    force: '',
+    unit: '',
+    rank: '',
+    jobType: ''
+  });
 
   const handleNextStep1 = () => {
     setError(null);
@@ -61,22 +52,12 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
 
   const handleNextStep2 = () => {
     setError(null);
-    const res = validateStep2ServiceDetails(serviceDetails);
+    const res = validateStep2LoginCredentials(loginCredentials);
     if (res.message) {
       setError(res.message);
       return;
     }
     setCurrentStep(3);
-  };
-
-  const handleNextStep3 = () => {
-    setError(null);
-    const res = validateStep3CurrentStatus(currentStatus);
-    if (res.message) {
-      setError(res.message);
-      return;
-    }
-    setCurrentStep(4);
   };
 
   const handleFinalSubmit = async () => {
@@ -88,17 +69,17 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
       return;
     }
 
-    const valStep4 = validateStep4LoginCredentials(loginCredentials);
-    if (valStep4.message) {
-      setError(valStep4.message);
+    const valStep2 = validateStep2LoginCredentials(loginCredentials);
+    if (valStep2.message) {
+      setError(valStep2.message);
+      setCurrentStep(2);
       return;
     }
 
     const fullPayload = {
       personalDetails: valStep1.values,
-      serviceDetails: validateStep2ServiceDetails(serviceDetails).values,
-      currentStatus: validateStep3CurrentStatus(currentStatus).values,
-      loginCredentials: valStep4.values,
+      loginCredentials: valStep2.values,
+      serviceDetails: validateStep3ServiceSelection(serviceDetails, role).values,
       role
     };
 
@@ -130,7 +111,7 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
             <div className="auth-icon-badge">
               <ShieldCheck size={22} strokeWidth={3} />
             </div>
-            <p className="auth-subtitle">Personnel Onboarding • Step {currentStep} of 4</p>
+            <p className="auth-subtitle">Personnel Onboarding • Step {currentStep} of 3</p>
             <h1 className="auth-title">Register for Sentinel</h1>
           </div>
 
@@ -151,31 +132,24 @@ function Register({ onBack, onOpenLogin, onRegisterSuccess }) {
           )}
 
           {currentStep === 2 && (
-            <ServiceDetailsStep
-              data={serviceDetails}
-              updateData={(fields) => setServiceDetails((prev) => ({ ...prev, ...fields }))}
-              onNext={handleNextStep2}
-              onBack={() => setCurrentStep(1)}
-            />
-          )}
-
-          {currentStep === 3 && (
-            <CurrentStatusStep
-              data={currentStatus}
-              updateData={(fields) => setCurrentStatus((prev) => ({ ...prev, ...fields }))}
-              onNext={handleNextStep3}
-              onBack={() => setCurrentStep(2)}
-            />
-          )}
-
-          {currentStep === 4 && (
             <LoginCredentialsStep
               data={loginCredentials}
               updateData={(fields) => setLoginCredentials((prev) => ({ ...prev, ...fields }))}
               role={role}
               setRole={setRole}
-              onSubmit={handleFinalSubmit}
-              onBack={() => setCurrentStep(3)}
+              onSubmit={handleNextStep2}
+              onBack={() => setCurrentStep(1)}
+              loading={loading}
+            />
+          )}
+
+          {currentStep === 3 && (
+            <ServiceSelectionStep
+              data={serviceDetails}
+              updateData={(fields) => setServiceDetails((prev) => ({ ...prev, ...fields }))}
+              role={role}
+              onNext={handleFinalSubmit}
+              onBack={() => setCurrentStep(2)}
               loading={loading}
             />
           )}

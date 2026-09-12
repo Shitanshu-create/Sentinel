@@ -22,9 +22,9 @@ const userSchema = new mongoose.Schema({
     // Service Details
     serviceDetails: {
         rank: { type: String, trim: true, maxlength: 60 },
-        role: { type: String, trim: true, maxlength: 100 },
+        jobType: { type: String, trim: true, maxlength: 100 },
         unit: { type: String, trim: true, maxlength: 100 },
-        department: { type: String, trim: true, maxlength: 100 }
+        force: { type: String, trim: true, maxlength: 100 }
     },
 
     // Current Status

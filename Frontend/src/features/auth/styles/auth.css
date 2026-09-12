@@ -176,6 +176,43 @@
   background-color: color-mix(in srgb, var(--color-warning) 30%, transparent);
 }
 
+.auth-password-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.auth-password-wrapper .auth-input {
+  padding-right: 2.75rem;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+  opacity: 0.7;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.auth-password-toggle:hover {
+  opacity: 1;
+}
+
+.auth-password-toggle:focus-visible {
+  outline: 2px solid var(--color-ink);
+  border-radius: 0.25rem;
+}
+
 select.auth-input {
   cursor: pointer;
   width: 100%;

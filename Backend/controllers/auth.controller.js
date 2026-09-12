@@ -19,7 +19,7 @@ const authCookieOptions = {
  */
 async function registerUserController(req, res, next) {
     try {
-        const { personalDetails, serviceDetails, currentStatus, loginCredentials, username: flatUsername, email: flatEmail, password: flatPassword } = req.body;
+        const { personalDetails, serviceDetails, loginCredentials, username: flatUsername, email: flatEmail, password: flatPassword } = req.body;
 
         const username = loginCredentials?.username || flatUsername;
         const email = personalDetails?.email || flatEmail;
@@ -58,12 +58,7 @@ async function registerUserController(req, res, next) {
                 gender: personalDetails.gender,
                 phoneNo: personalDetails.phoneNo
             } : { name: username },
-            serviceDetails: serviceDetails || {},
-            currentStatus: currentStatus ? {
-                ...currentStatus,
-                estimatedWorkHours: currentStatus.estimatedWorkHours ? Number(currentStatus.estimatedWorkHours) : undefined,
-                lastLeaveDate: currentStatus.lastLeaveDate ? new Date(currentStatus.lastLeaveDate) : undefined
-            } : {}
+            serviceDetails: serviceDetails || {}
         });
 
         const token = jwt.sign(

@@ -22,18 +22,9 @@ const personalDetailsSchema = z.object({
 
 const serviceDetailsSchema = z.object({
     rank: z.string().trim().max(60).optional().nullable(),
-    role: z.string().trim().max(100).optional().nullable(),
+    jobType: z.string().trim().max(100).optional().nullable(),
     unit: z.string().trim().max(100).optional().nullable(),
-    department: z.string().trim().max(100).optional().nullable()
-}).optional().nullable();
-
-const currentStatusSchema = z.object({
-    postingLocation: z.string().trim().max(150).optional().nullable(),
-    estimatedWorkHours: z.union([z.number(), z.string()]).transform(v => (v === '' || v === null || v === undefined ? null : Number(v))).pipe(
-        z.number().min(0).max(24).nullable()
-    ).optional().nullable(),
-    lastLeaveDate: z.union([z.string(), z.date()]).optional().nullable(),
-    dutySchedule: z.string().trim().max(200).optional().nullable()
+    force: z.string().trim().max(100).optional().nullable()
 }).optional().nullable();
 
 const loginCredentialsSchema = z.object({
@@ -47,7 +38,6 @@ const loginCredentialsSchema = z.object({
 const registerSchema = z.object({
     personalDetails: personalDetailsSchema.optional(),
     serviceDetails: serviceDetailsSchema.optional(),
-    currentStatus: currentStatusSchema.optional(),
     loginCredentials: loginCredentialsSchema.optional(),
     role: z.enum(["personnel", "welfare_officer", "commander"]).optional().default("personnel"),
     // Fallback flat fields

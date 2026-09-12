@@ -3,7 +3,7 @@ import { fetchUnitsSummary } from '../services/commandingOfficer.api.js';
 
 export function useUnitsSummary() {
   const [units, setUnits] = useState([]);
-  const [department, setDepartment] = useState(null);
+  const [force, setForce] = useState(null);
   const [unitsRequest, setUnitsRequest] = useState({ loading: false, error: null });
 
   useEffect(() => {
@@ -12,7 +12,7 @@ export function useUnitsSummary() {
         setUnitsRequest({ loading: true, error: null });
         const res = await fetchUnitsSummary();
         setUnits(res.units || []);
-        setDepartment(res.department || null);
+        setForce(res.force || res.department || null);
         setUnitsRequest({ loading: false, error: null });
       } catch (err) {
         console.error("Failed to fetch units summary:", err);
@@ -25,5 +25,5 @@ export function useUnitsSummary() {
     load();
   }, []);
 
-  return { units, department, unitsRequest, request: unitsRequest };
+  return { units, force, department: force, unitsRequest, request: unitsRequest };
 }

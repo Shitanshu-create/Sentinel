@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 
 const organizationalNoteSchema = new mongoose.Schema({
-    department: {
+    force: {
         type: String,
-        required: [true, "Department is required"],
+        required: [true, "Force is required"],
         trim: true,
         index: true
     },
@@ -31,7 +31,7 @@ const organizationalNoteSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-organizationalNoteSchema.index({ department: 1, unit: 1, createdAt: -1 });
+organizationalNoteSchema.index({ force: 1, unit: 1, createdAt: -1 });
 
 const OrganizationalNote = mongoose.model("OrganizationalNote", organizationalNoteSchema);
 

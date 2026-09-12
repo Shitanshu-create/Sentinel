@@ -3,20 +3,22 @@ import UserStats from "../models/userStats.model.js";
 import journalReportModel from "../models/journalReport.model.js";
 import { getOrGenerateInsights } from "./journal.service.js";
 
-// Returns personnel sharing the officer's unit (Option A scoping from PRD section 1.1)
+// Returns personnel sharing the officer's force AND unit (fixes the unit-name-collision bug — see PRD Section 0)
 async function getRosterForOfficer(officerId) {
-    const officer = await UserModel.findById(officerId).select("serviceDetails.unit");
+    const officer = await UserModel.findById(officerId).select("serviceDetails.force serviceDetails.unit");
+    const officerForce = officer?.serviceDetails?.force?.trim().toLowerCase();
     const officerUnit = officer?.serviceDetails?.unit?.trim().toLowerCase();
 
-    if (!officerUnit) return [];
+    if (!officerForce || !officerUnit) return [];
 
     const personnel = await UserModel.find({
         role: "personnel"
     }).select("username personalDetails.name serviceDetails currentStatus");
 
-    // Case-insensitive unit match (see PRD 1.1 note on free-text unit matching)
+    // Case-insensitive force AND unit match
     const matched = personnel.filter(
-        (p) => p.serviceDetails?.unit?.trim().toLowerCase() === officerUnit
+        (p) => p.serviceDetails?.force?.trim().toLowerCase() === officerForce
+            && p.serviceDetails?.unit?.trim().toLowerCase() === officerUnit
     );
 
     const userIds = matched.map((p) => p._id);
@@ -28,6 +30,7 @@ async function getRosterForOfficer(officerId) {
         name: p.personalDetails?.name || p.username,
         rank: p.serviceDetails?.rank || null,
         unit: p.serviceDetails?.unit || null,
+        force: p.serviceDetails?.force || null,
         postingLocation: p.currentStatus?.postingLocation || null,
         stats: statsByUser[String(p._id)] || null
     }));

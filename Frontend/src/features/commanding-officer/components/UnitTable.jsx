@@ -20,7 +20,7 @@ export function UnitTable({ units }) {
   if (!units || units.length === 0) {
     return (
       <Panel padding="p-5" className="roster-empty-panel">
-        <p className="obs-desc">No units found under your department.</p>
+        <p className="obs-desc">No units found under your force.</p>
       </Panel>
     );
   }
@@ -60,6 +60,7 @@ export function UnitTable({ units }) {
           filteredUnits.map((u) => (
             <UnitRow
               key={u.unit}
+              unitSummary={u}
               unitData={u}
               onClick={() => navigate(`/commanding-officer/units/${encodeURIComponent(u.unit)}`)}
             />

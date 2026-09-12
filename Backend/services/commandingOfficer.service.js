@@ -2,20 +2,20 @@ import UserModel from "../models/user.model.js";
 import UserStats from "../models/userStats.model.js";
 import journalReportModel from "../models/journalReport.model.js";
 
-async function getDepartmentForCommander(commanderId) {
-    const commander = await UserModel.findById(commanderId).select("serviceDetails.department");
-    return commander?.serviceDetails?.department?.trim().toLowerCase() || null;
+async function getForceForCommander(commanderId) {
+    const commander = await UserModel.findById(commanderId).select("serviceDetails.force");
+    return commander?.serviceDetails?.force?.trim().toLowerCase() || null;
 }
 
-// Department-wide summary, grouped by unit — never returns individual names
-async function getUnitsSummaryForDepartment(department) {
-    if (!department) return [];
+// Force-wide summary, grouped by unit — never returns individual names
+async function getUnitsSummaryForForce(force) {
+    if (!force) return [];
 
     const personnel = await UserModel.find({ role: "personnel" })
-        .select("serviceDetails.unit serviceDetails.department");
+        .select("serviceDetails.unit serviceDetails.force");
 
     const matched = personnel.filter(
-        (p) => p.serviceDetails?.department?.trim().toLowerCase() === department
+        (p) => p.serviceDetails?.force?.trim().toLowerCase() === force
     );
 
     const userIds = matched.map((p) => p._id);
@@ -51,21 +51,21 @@ async function getUnitsSummaryForDepartment(department) {
             return RISK_SEVERITY[level] > RISK_SEVERITY[worst] ? level : worst;
         }, "normal");
 
-        return { unit: unitName, personnelCount: count, avgStress, avgSleep, riskLevel: worstRisk };
+        return { unit: unitName, personnelCount: count, avgStress, avgSleep, worstCaseRiskLevel: worstRisk, riskLevel: worstRisk };
     });
 }
 
 // Aggregated, anonymized trend data for one unit — no personnel names/IDs anywhere in the response
-async function getUnitDetail(department, unitName) {
+async function getUnitDetail(force, unitName) {
     const personnel = await UserModel.find({ role: "personnel" })
-        .select("serviceDetails.unit serviceDetails.department");
+        .select("serviceDetails.unit serviceDetails.force");
 
     const matched = personnel.filter(
-        (p) => p.serviceDetails?.department?.trim().toLowerCase() === department
+        (p) => p.serviceDetails?.force?.trim().toLowerCase() === force
             && p.serviceDetails?.unit?.trim() === unitName
     );
 
-    if (matched.length === 0) return null; // also guards against a commander requesting a unit outside their department
+    if (matched.length === 0) return null; // also guards against a commander requesting a unit outside their force
 
     const userIds = matched.map((p) => p._id);
     const statsList = await UserStats.find({ userId: { $in: userIds } });
@@ -100,11 +100,11 @@ async function getUnitDetail(department, unitName) {
 
     return {
         unit: unitName,
-        department,
+        force,
         personnelCount: matched.length,
         stats: unitStats,
         entries
     };
 }
 
-export { getDepartmentForCommander, getUnitsSummaryForDepartment, getUnitDetail };
+export { getForceForCommander, getUnitsSummaryForForce, getUnitDetail };
