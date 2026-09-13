@@ -39,6 +39,9 @@ AIML/audio/recordings/
 # Generated logs
 AIML/logs/
 
+# Generated embedding vectors
+storage/embeddings/
+
 # Environment/secrets
 .env
 *.env

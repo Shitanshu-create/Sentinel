@@ -14,7 +14,7 @@ from typing import Any
 
 import numpy as np
 
-from model_loader import WhisperModelLoader
+from .model_loader import WhisperModelLoader
 
 
 class WhisperService:
@@ -53,8 +53,9 @@ class WhisperService:
         self.model_loader = model_loader
         self.language = language
 
-        # Load model if not already loaded
-        self.model = self.model_loader.load_model()
+        # Loading can download/allocate a sizeable model, so defer it until a
+        # transcription request actually arrives.
+        self.model = None
 
     # ------------------------------------------------------------------
     # AUDIO PREPARATION
@@ -143,6 +144,8 @@ class WhisperService:
         audio = self._prepare_audio(audio)
 
         try:
+            if self.model is None:
+                self.model = self.model_loader.load_model()
             segments, info = self.model.transcribe(
                 audio,
                 language=self.language,

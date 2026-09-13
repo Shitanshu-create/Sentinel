@@ -3,4 +3,6 @@ torch
 sounddevice 
 soundfile
 numpy 
+ollama
 faster-whisper
+streamlit

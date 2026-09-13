@@ -8,7 +8,6 @@ Responsible for:
 """
 
 import torch
-import whisper
 
 
 class WhisperModelLoader:
@@ -51,6 +50,7 @@ class WhisperModelLoader:
             self.device = device
 
         self.model = None
+        self.compute_type = "float16" if self.device == "cuda" else "int8"
 
     def load_model(self):
         """
@@ -75,9 +75,12 @@ class WhisperModelLoader:
         )
 
         try:
-            self.model = whisper.load_model(
+            from faster_whisper import WhisperModel
+
+            self.model = WhisperModel(
                 self.model_name,
                 device=self.device,
+                compute_type=self.compute_type,
             )
 
             print("Whisper model loaded successfully.")
