@@ -35,3 +35,37 @@ export function getRiskMeta(riskLevel) {
       };
   }
 }
+
+export function getConcernMeta(level) {
+  switch (level) {
+    case 'high':
+      return {
+        title: 'High Concern',
+        badge: 'High',
+        color: 'var(--color-danger)',
+        bg: 'color-mix(in srgb, var(--color-danger) 15%, var(--color-surface))'
+      };
+    case 'elevated':
+      return {
+        title: 'Elevated Concern',
+        badge: 'Elevated',
+        color: 'var(--color-warning)',
+        bg: 'color-mix(in srgb, var(--color-warning) 15%, var(--color-surface))'
+      };
+    case 'moderate':
+      return {
+        title: 'Moderate Concern',
+        badge: 'Moderate',
+        color: 'var(--color-accent)',
+        bg: 'color-mix(in srgb, var(--color-accent) 15%, var(--color-surface))'
+      };
+    case 'low':
+    default:
+      return {
+        title: 'Low Concern',
+        badge: 'Low',
+        color: 'var(--color-success)',
+        bg: 'color-mix(in srgb, var(--color-success) 15%, var(--color-surface))'
+      };
+  }
+}

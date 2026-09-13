@@ -28,7 +28,15 @@ import { WellnessRiskPanel } from '../components/WellnessRiskPanel.jsx';
 import { WellnessTrendsPanel } from '../components/WellnessTrendsPanel.jsx';
 import { WellnessOverviewPanel } from '../components/WellnessOverviewPanel.jsx';
 
-function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectEntry }) {
+function AnalyticsPage({
+  onOpenWriting,
+  onOpenChat,
+  onOpenAssessments,
+  pendingAssessments,
+  onLogout,
+  entries,
+  onSelectEntry
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [range, setRange] = useState('Past Month');
   const [trendsRange, setTrendsRange] = useState('30D');
@@ -69,7 +77,9 @@ function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectE
           onOpenWriting={onOpenWriting}
           onOpenChat={onOpenChat}
           onOpenAnalytics={undefined}
+          onOpenAssessments={onOpenAssessments}
           onLogout={onLogout}
+          pendingAssessments={pendingAssessments}
         />
         <SidePanel 
           open={sidebarOpen} 

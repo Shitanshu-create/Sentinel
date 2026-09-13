@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, LogOut, Moon, Sun, Home } from 'lucide-react';
+import { Users, ClipboardList, LogOut, Moon, Sun, Home } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '../../theme/ThemeContext.jsx';
 import '../../../components/appsidebar.css';
@@ -9,7 +9,8 @@ export function OfficerSidebar({ onLogout }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isRosterActive = location.pathname.startsWith('/welfare-officer');
+  const isRosterActive = location.pathname === '/welfare-officer' || location.pathname.startsWith('/welfare-officer/personnel');
+  const isAssessmentsActive = location.pathname.startsWith('/welfare-officer/assessments');
 
   return (
     <>
@@ -23,6 +24,15 @@ export function OfficerSidebar({ onLogout }) {
             onClick={() => navigate('/welfare-officer')}
           >
             <Users size={21} strokeWidth={3} />
+          </button>
+          <button
+            type="button"
+            className={`sidebar-icon-btn ${isAssessmentsActive ? 'sidebar-icon-btn-active' : 'sidebar-icon-btn-inactive'}`}
+            title="Wellness Assessments"
+            aria-label="Wellness Assessments"
+            onClick={() => navigate('/welfare-officer/assessments')}
+          >
+            <ClipboardList size={21} strokeWidth={3} />
           </button>
         </div>
 
@@ -71,6 +81,16 @@ export function OfficerSidebar({ onLogout }) {
         </button>
         <button
           type="button"
+          className={`mobile-nav-btn ${isAssessmentsActive ? 'mobile-nav-btn-active' : ''}`}
+          onClick={() => navigate('/welfare-officer/assessments')}
+        >
+          <span className="mobile-nav-icon">
+            <ClipboardList size={22} strokeWidth={3} />
+          </span>
+          <span className="mobile-nav-label">Assessments</span>
+        </button>
+        <button
+          type="button"
           className="mobile-nav-btn"
           onClick={toggleTheme}
         >
@@ -81,7 +101,7 @@ export function OfficerSidebar({ onLogout }) {
         </button>
         <button
           type="button"
-          className="mobile-nav-btn"
+          className="mobile-nav-btn mobile-logout-btn"
           onClick={onLogout}
         >
           <span className="mobile-nav-icon">

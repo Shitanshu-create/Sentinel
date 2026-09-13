@@ -6,7 +6,15 @@ import { ChatMessages } from '../components/ChatMessages.jsx';
 import { ChatInputArea } from '../components/ChatInputArea.jsx';
 import '../styles/ChatPage.css';
 
-export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, entries, onSelectEntry }) {
+export default function ChatPage({
+  onOpenWriting,
+  onOpenAnalytics,
+  onOpenAssessments,
+  pendingAssessments,
+  onLogout,
+  entries,
+  onSelectEntry
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const {
@@ -30,7 +38,9 @@ export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, ent
         onOpenWriting={onOpenWriting}
         onOpenChat={undefined}
         onOpenAnalytics={onOpenAnalytics}
+        onOpenAssessments={onOpenAssessments}
         onLogout={onLogout}
+        pendingAssessments={pendingAssessments}
       />
       <SidePanel 
         open={sidebarOpen} 

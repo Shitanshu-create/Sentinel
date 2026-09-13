@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   BarChart3,
+  ClipboardList,
   FileText,
   LogOut,
   Menu,
@@ -19,7 +20,8 @@ const navItems = [
   { id: 'new', label: 'Add New Entry', icon: Plus },
   { id: 'journal', label: 'Open Writing Page', icon: FileText },
   { id: 'chat', label: 'AI Chat', icon: MessageSquareText },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 }
+  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'assessments', label: 'Wellness Assessments', icon: ClipboardList }
 ];
 
 const mobileNavItems = [
@@ -53,7 +55,9 @@ function AppSidebar({
   onOpenWriting,
   onOpenChat,
   onOpenAnalytics,
-  onLogout
+  onOpenAssessments,
+  onLogout,
+  pendingAssessments = 0
 }) {
   const { isLight, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -108,6 +112,7 @@ function AppSidebar({
     if (id === 'journal') onOpenWriting?.();
     if (id === 'chat') onOpenChat?.();
     if (id === 'analytics') onOpenAnalytics?.();
+    if (id === 'assessments') onOpenAssessments?.();
   };
 
   const handleMobileNav = (id) => {
@@ -134,6 +139,7 @@ function AppSidebar({
           <div className="sidebar-divider" />
           {navItems.map((item) => {
             const Icon = item.icon;
+            const hasPending = item.id === 'assessments' && pendingAssessments > 0;
             return (
               <IconButton
                 key={item.id}
@@ -141,7 +147,14 @@ function AppSidebar({
                 active={active === item.id}
                 onClick={() => handleNav(item.id)}
               >
-                <Icon size={21} strokeWidth={3} />
+                <div className="sidebar-badge-wrapper">
+                  <Icon size={21} strokeWidth={3} />
+                  {hasPending && (
+                    <span className="sidebar-badge" title={`${pendingAssessments} mandatory assessment(s)`}>
+                      {pendingAssessments}
+                    </span>
+                  )}
+                </div>
               </IconButton>
             );
           })}
@@ -221,7 +234,18 @@ function AppSidebar({
           role="menu"
           aria-label="More navigation options"
         >
-          {/* <div className="mobile-nav-sheet-handle" aria-hidden="true" /> */}
+          <button
+            type="button"
+            role="menuitem"
+            className="mobile-sheet-action"
+            onClick={() => handleMobileMenuAction(onOpenAssessments)}
+          >
+            <ClipboardList size={23} strokeWidth={3} />
+            <span>Assessments</span>
+            {pendingAssessments > 0 && (
+              <span className="mobile-badge-pill">{pendingAssessments}</span>
+            )}
+          </button>
           <button
             type="button"
             role="menuitem"

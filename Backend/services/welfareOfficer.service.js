@@ -57,4 +57,19 @@ async function getPersonnelDetail(personnelId) {
     return { person, stats, recentEntries, insights };
 }
 
-export { getRosterForOfficer, getPersonnelDetail };
+// Confirms a given personnel is within this officer's force+unit scope —
+// reused by assessment.service.js to prevent assigning assessments outside scope
+async function isPersonnelInOfficerScope(officerId, personnelId) {
+    const officer = await UserModel.findById(officerId).select("serviceDetails.force serviceDetails.unit");
+    const officerForce = officer?.serviceDetails?.force?.trim().toLowerCase();
+    const officerUnit = officer?.serviceDetails?.unit?.trim().toLowerCase();
+    if (!officerForce || !officerUnit) return false;
+
+    const person = await UserModel.findById(personnelId).select("role serviceDetails.force serviceDetails.unit");
+    if (!person || person.role !== "personnel") return false;
+
+    return person.serviceDetails?.force?.trim().toLowerCase() === officerForce
+        && person.serviceDetails?.unit?.trim().toLowerCase() === officerUnit;
+}
+
+export { getRosterForOfficer, getPersonnelDetail, isPersonnelInOfficerScope };

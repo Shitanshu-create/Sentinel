@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Filter } from 'lucide-react';
+import { Search, Filter, ArrowUpDown } from 'lucide-react';
 import { Panel } from '../../analytics/components/Panel.jsx';
 import { RosterRow } from './RosterRow.jsx';
 
@@ -8,6 +8,7 @@ export function RosterTable({ roster }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [riskFilter, setRiskFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('stress-desc');
 
   const filteredRoster = useMemo(() => {
     return (roster || []).filter((person) => {
@@ -17,6 +18,22 @@ export function RosterTable({ roster }) {
       return matchesSearch && matchesRisk;
     });
   }, [roster, searchTerm, riskFilter]);
+
+  const sortedRoster = useMemo(() => {
+    const list = [...filteredRoster];
+    list.sort((a, b) => {
+      const aStress = a.stats?.currentStressStatus ?? 0;
+      const bStress = b.stats?.currentStressStatus ?? 0;
+      if (sortOrder === 'stress-desc') {
+        return bStress - aStress;
+      }
+      if (sortOrder === 'stress-asc') {
+        return aStress - bStress;
+      }
+      return (a.name || '').localeCompare(b.name || '');
+    });
+    return list;
+  }, [filteredRoster, sortOrder]);
 
   if (!roster || roster.length === 0) {
     return (
@@ -54,11 +71,24 @@ export function RosterTable({ roster }) {
             <option value="normal">Normal Status</option>
           </select>
         </div>
+
+        <div className="roster-filter-group">
+          <ArrowUpDown size={15} className="roster-filter-icon" />
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="roster-filter-select"
+          >
+            <option value="stress-desc">Highest Stress First</option>
+            <option value="stress-asc">Lowest Stress First</option>
+            <option value="name-asc">Name (A-Z)</option>
+          </select>
+        </div>
       </div>
 
       <div className="roster-table">
-        {filteredRoster.length > 0 ? (
-          filteredRoster.map((person) => (
+        {sortedRoster.length > 0 ? (
+          sortedRoster.map((person) => (
             <RosterRow
               key={person.id}
               person={person}
@@ -74,3 +104,5 @@ export function RosterTable({ roster }) {
     </Panel>
   );
 }
+
+export default RosterTable;

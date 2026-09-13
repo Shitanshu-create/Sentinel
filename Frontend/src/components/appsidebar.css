@@ -62,6 +62,43 @@
   color: var(--color-text-muted);
 }
 
+.sidebar-badge-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: var(--color-danger, #e63946);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  border: 2px solid var(--color-sidebar, #121212);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.mobile-badge-pill {
+  margin-left: auto;
+  background-color: var(--color-danger, #e63946);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+}
+
 .sidebar-logout-btn:hover {
   background-color: var(--color-danger) !important;
   color: var(--color-ink);

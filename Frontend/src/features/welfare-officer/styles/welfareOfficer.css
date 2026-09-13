@@ -587,3 +587,419 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ── Wellness Assessment Assign Form & Officer Lists ── */
+.assign-assessment-question-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.625rem;
+}
+
+@media (min-width: 640px) {
+  .assign-assessment-question-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.assign-assessment-question-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0.875rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.assign-assessment-question-item:hover {
+  border-color: var(--color-ink);
+}
+
+.assign-assessment-question-item.selected {
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  border-color: var(--color-accent);
+}
+
+.assign-assessment-checkbox {
+  margin-top: 0.2rem;
+  accent-color: var(--color-accent-strong);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.assign-assessment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.assign-assessment-category {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.35rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-accent-strong);
+}
+
+.assign-assessment-text {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-strong);
+  line-height: 1.35;
+}
+
+.assign-assessment-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.25rem;
+}
+
+.assign-assessment-counter {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.assign-assessment-counter.insufficient {
+  color: var(--color-warning);
+}
+
+.assign-assessment-counter.ready {
+  color: var(--color-success);
+}
+
+/* ── Officer Assessments Row & Detail ── */
+.officer-assessment-row-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.875rem;
+  box-shadow: 0 4px 15px var(--color-shadow);
+  overflow: hidden;
+  transition: border-color 150ms ease;
+  margin-bottom: 0.875rem;
+}
+
+.officer-assessment-row-card:hover {
+  border-color: var(--color-ink);
+}
+
+.officer-assessment-row-card.expanded {
+  border-color: var(--color-ink);
+}
+
+.officer-assessment-row-header {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.officer-row-person-info {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.officer-row-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
+  border: 2px solid var(--color-ink);
+  background-color: var(--color-surface-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink);
+}
+
+.officer-row-name-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.officer-row-name {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+}
+
+.officer-row-unit {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.officer-row-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  margin-top: 0.15rem;
+}
+
+.officer-row-status-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.officer-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border: 1px solid var(--color-border);
+}
+
+.officer-status-pill.completed {
+  background-color: color-mix(in srgb, var(--color-success) 15%, var(--color-surface));
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.officer-status-pill.pending {
+  background-color: color-mix(in srgb, var(--color-warning) 15%, var(--color-surface));
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.officer-row-toggle-icon {
+  color: var(--color-text-faint);
+}
+
+.officer-assessment-row-body {
+  border-top: 1px solid var(--color-border);
+  padding: 1.25rem;
+  background-color: var(--color-surface-strong);
+}
+
+.officer-assessment-detail-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.officer-assessment-detail-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.officer-detail-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.5rem;
+}
+
+/* AI Analysis Card */
+.officer-ai-analysis-card {
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-ink);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 4px 4px 0px var(--color-ink);
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.officer-ai-analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.officer-ai-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.officer-ai-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--color-ink);
+  color: var(--color-surface);
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.35rem;
+}
+
+.officer-ai-summary {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.officer-ai-factors-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.officer-ai-factors-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+}
+
+.officer-ai-factors-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.officer-factor-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.4rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-strong);
+}
+
+.officer-ai-action-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+  border: 1px solid var(--color-accent);
+}
+
+.officer-action-icon {
+  color: var(--color-accent-strong);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.officer-action-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-accent-strong);
+  margin: 0 0 0.2rem 0;
+}
+
+.officer-action-text {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* QA section */
+.officer-qa-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.officer-qa-title {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.officer-qa-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.officer-qa-item {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  padding: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.officer-qa-question {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.officer-qa-num {
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.officer-q-text {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-strong);
+  margin: 0.2rem 0 0 0;
+}
+
+.officer-qa-answer {
+  background-color: var(--color-surface-strong);
+  border-left: 3px solid var(--color-accent);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 0.35rem 0.35rem 0;
+}
+
+.officer-a-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: 0.2rem;
+}
+
+.officer-a-text {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text);
+  margin: 0;
+  white-space: pre-wrap;
+}
+

@@ -36,6 +36,8 @@ function WritingPage({
   onLogout,
   onOpenAnalytics,
   onOpenChat,
+  onOpenAssessments,
+  pendingAssessments,
   entries,
   setEntries,
   selectedEntryId,
@@ -150,7 +152,9 @@ function WritingPage({
           }}
           onOpenChat={onOpenChat}
           onOpenAnalytics={onOpenAnalytics}
+          onOpenAssessments={onOpenAssessments}
           onLogout={onLogout}
+          pendingAssessments={pendingAssessments}
         />
 
         <SidePanel

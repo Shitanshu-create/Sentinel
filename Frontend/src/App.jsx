@@ -4,6 +4,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx';
 import ProtectedRoute from './features/auth/components/ProtectedRoute.jsx';
 import { useAuth } from './features/auth/hooks/useAuth.js';
 import { fetchEntries, fetchObservations } from './features/ai-chat/services/journal.api.js';
+import { fetchMyAssessments } from './features/assessments/services/assessment.api.js';
 import LandingPage from './pages/LandingPage.jsx';
 import { formatEntry } from './shared/utils/formatEntry.js';
 import { WelcomePopup } from './shared/components/WelcomePopup.jsx';
@@ -15,6 +16,8 @@ const Register = lazy(() => import('./features/auth/pages/RegisterPage.jsx'));
 const WritingPage = lazy(() => import('./features/writing/pages/WritingPage.jsx'));
 const WelfareOfficerDashboardPage = lazy(() => import('./features/welfare-officer/pages/WelfareOfficerDashboardPage.jsx'));
 const PersonnelDetailPage = lazy(() => import('./features/welfare-officer/pages/PersonnelDetailPage.jsx'));
+const OfficerAssessmentsPage = lazy(() => import('./features/welfare-officer/pages/OfficerAssessmentsPage.jsx'));
+const PersonnelAssessmentsPage = lazy(() => import('./features/assessments/pages/PersonnelAssessmentsPage.jsx'));
 const CommandDashboardPage = lazy(() => import('./features/commanding-officer/pages/CommandDashboardPage.jsx'));
 const UnitDetailPage = lazy(() => import('./features/commanding-officer/pages/UnitDetailPage.jsx'));
 
@@ -39,7 +42,20 @@ function App() {
   const { user, loading, handleLogout } = useAuth();
   const [entries, setEntries] = useState([]);
   const [selectedEntryId, setSelectedEntryId] = useState(null);
+  const [pendingAssessments, setPendingAssessments] = useState(0);
   const isLoggedIn = !!user;
+
+  const refreshPendingAssessments = async () => {
+    if (user?.role === 'personnel') {
+      try {
+        const res = await fetchMyAssessments();
+        const pending = (res.assessments || []).filter((a) => a.status === 'assigned').length;
+        setPendingAssessments(pending);
+      } catch (err) {
+        // ignore errors in background fetch
+      }
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -59,9 +75,15 @@ function App() {
       };
 
       getEntries();
+      if (user.role === 'personnel') {
+        refreshPendingAssessments();
+      } else {
+        setPendingAssessments(0);
+      }
     } else {
       setEntries([]);
       setSelectedEntryId(null);
+      setPendingAssessments(0);
     }
   }, [user]);
 
@@ -120,6 +142,8 @@ function App() {
                   onLogout={logoutUser}
                   onOpenAnalytics={() => navigate('/analytics')}
                   onOpenChat={() => navigate('/chat')}
+                  onOpenAssessments={() => navigate('/assessments')}
+                  pendingAssessments={pendingAssessments}
                   entries={entries}
                   setEntries={setEntries}
                   selectedEntryId={selectedEntryId}
@@ -136,6 +160,8 @@ function App() {
                   onLogout={logoutUser}
                   onOpenAnalytics={() => navigate('/analytics')}
                   onOpenWriting={() => navigate('/journal')}
+                  onOpenAssessments={() => navigate('/assessments')}
+                  pendingAssessments={pendingAssessments}
                   entries={entries}
                   onSelectEntry={openEntryInJournal}
                 />
@@ -150,8 +176,25 @@ function App() {
                   onLogout={logoutUser}
                   onOpenWriting={() => navigate('/journal')}
                   onOpenChat={() => navigate('/chat')}
+                  onOpenAssessments={() => navigate('/assessments')}
+                  pendingAssessments={pendingAssessments}
                   entries={entries}
                   onSelectEntry={openEntryInJournal}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/assessments"
+            element={
+              <ProtectedRoute allowedRoles={['personnel']}>
+                <PersonnelAssessmentsPage
+                  onLogout={logoutUser}
+                  onOpenWriting={() => navigate('/journal')}
+                  onOpenChat={() => navigate('/chat')}
+                  onOpenAnalytics={() => navigate('/analytics')}
+                  onOpenAssessments={() => navigate('/assessments')}
+                  pendingAssessments={pendingAssessments}
                 />
               </ProtectedRoute>
             }
@@ -161,6 +204,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={['welfare_officer', 'commander', 'admin']}>
                 <WelfareOfficerDashboardPage onLogout={logoutUser} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/welfare-officer/assessments"
+            element={
+              <ProtectedRoute allowedRoles={['welfare_officer', 'commander', 'admin']}>
+                <OfficerAssessmentsPage onLogout={logoutUser} />
               </ProtectedRoute>
             }
           />

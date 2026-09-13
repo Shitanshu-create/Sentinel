@@ -4,6 +4,7 @@ import OfficerSidebar from '../components/OfficerSidebar.jsx';
 import { PersonnelHeaderCard } from '../components/PersonnelHeaderCard.jsx';
 import { WelfareNotesPanel } from '../components/WelfareNotesPanel.jsx';
 import { AddNoteForm } from '../components/AddNoteForm.jsx';
+import { AssignAssessmentForm } from '../components/AssignAssessmentForm.jsx';
 import { usePersonnelDetail } from '../hooks/usePersonnelDetail.js';
 
 // Reused components & hooks from analytics feature
@@ -103,6 +104,7 @@ export function PersonnelDetailPage({ onLogout }) {
 
                 <WelfareNotesPanel notes={notes} />
                 <AddNoteForm personnelId={id} onAdded={reload} />
+                <AssignAssessmentForm personnelId={id} onAssigned={reload} />
               </>
             )}
           </div>
