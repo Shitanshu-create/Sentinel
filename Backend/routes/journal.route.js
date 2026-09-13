@@ -7,7 +7,8 @@ import {
     chatSchema,
     idParamSchema,
     journalEntrySchema,
-    journalUpdateSchema
+    journalUpdateSchema,
+    transcribeAudioSchema
 } from "../validations/journal.validation.js";
 
 
@@ -19,6 +20,13 @@ const journalRouter = express.Router();
  * @access Private
  */
 journalRouter.post("/chat", authMiddleware.authUser, validateBody(chatSchema), chatController.chatWithAI);
+
+/**
+ * @route POST /api/journal/transcribe
+ * @description Transcribe a recorded voice clip into text for journal entry
+ * @access Private
+ */
+journalRouter.post("/transcribe", authMiddleware.authUser, validateBody(transcribeAudioSchema), journalController.transcribeAudioController);
 
 /**
  * @route POST /api/journal

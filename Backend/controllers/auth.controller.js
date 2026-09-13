@@ -219,4 +219,58 @@ async function getMeController(req, res, next) {
     }
 }
 
-export default { registerUserController, loginUserController, logoutUserController, getMeController };
+/**
+ * @name updateProfileController
+ * @description Update the logged-in user's personal/service/current-status details
+ * @access Private
+ */
+async function updateProfileController(req, res, next) {
+    try {
+        const { personalDetails, serviceDetails, currentStatus } = req.body;
+
+        const update = {};
+        if (personalDetails) {
+            Object.entries(personalDetails).forEach(([key, value]) => {
+                update[`personalDetails.${key}`] = value;
+            });
+        }
+        if (serviceDetails) {
+            Object.entries(serviceDetails).forEach(([key, value]) => {
+                update[`serviceDetails.${key}`] = value;
+            });
+        }
+        if (currentStatus) {
+            Object.entries(currentStatus).forEach(([key, value]) => {
+                update[`currentStatus.${key}`] = value;
+            });
+        }
+
+        const userId = req.user?.Id || req.user?.id;
+        const user = await UserModel.findByIdAndUpdate(
+            userId,
+            { $set: update },
+            { new: true, runValidators: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Profile updated successfully",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email,
+                role: user.role || "personnel",
+                personalDetails: user.personalDetails || {},
+                serviceDetails: user.serviceDetails || {},
+                currentStatus: user.currentStatus || {}
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export default { registerUserController, loginUserController, logoutUserController, getMeController, updateProfileController };

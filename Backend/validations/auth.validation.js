@@ -57,4 +57,4 @@ const loginSchema = z.object({
         .max(128, "Password must be 128 characters or less")
 });
 
-export { registerSchema, loginSchema };
+export { registerSchema, loginSchema, serviceDetailsSchema };

@@ -22,6 +22,9 @@ const insightsCacheSchema = new mongoose.Schema({
     lastEntryDate: {
         type: Date
     },
+    lastProfileUpdatedAt: {
+        type: Date
+    },
     privacyVersion: {
         type: Number,
         default: 1

@@ -4,6 +4,7 @@ import UserStats from "../models/userStats.model.js";
 import InsightsCache from "../models/insightsCache.model.js";
 import { recalculateUserStats } from "../services/stats.service.js";
 import { sanitizeForPrompt } from "../utils/sanitize.js";
+import { transcribeAudio } from "../services/transcription.service.js";
 
 /**
  * @desc Generate a journal report based on the provided journal entry.
@@ -256,11 +257,23 @@ async function modifyJournalController(req, res) {
     }
 }
 
+async function transcribeAudioController(req, res) {
+    try {
+        const { audioData, mimeType } = req.body;
+        const text = await transcribeAudio({ audioData, mimeType });
+        res.status(200).json({ message: "Audio transcribed successfully", text });
+    } catch (error) {
+        console.error("Transcribe Audio Error:", error);
+        res.status(500).json({ message: "Failed to transcribe audio. Please try again." });
+    }
+}
+
 export default { 
     generateJournalReportController, 
     getJournalEntriesController, 
     getUserStatsController,
     getAIObservationsController: getGlobalInsightsController,
     deleteJournalController,
-    modifyJournalController
+    modifyJournalController,
+    transcribeAudioController
 };

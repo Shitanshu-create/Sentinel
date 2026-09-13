@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bold, Highlighter, ImagePlus, Italic, Save, Sparkles, Trash2 } from 'lucide-react';
+import { Bold, Highlighter, ImagePlus, Italic, Loader2, Mic, Save, Sparkles, Trash2 } from 'lucide-react';
 
 export function WritingToolbar({
   editor,
@@ -12,7 +12,11 @@ export function WritingToolbar({
   saveStatus,
   deleteStatus,
   selectedEntryId,
-  deleteSelectedEntry
+  deleteSelectedEntry,
+  isRecording,
+  isTranscribing,
+  voiceSupported,
+  toggleRecording
 }) {
   return (
     <div className="writing-toolbar">
@@ -56,6 +60,20 @@ export function WritingToolbar({
         >
           <Highlighter size={20} strokeWidth={3} />
         </button>
+        {voiceSupported && (
+          <button
+            type="button"
+            onClick={toggleRecording}
+            disabled={isTranscribing}
+            className={`writing-format-btn ${
+              isRecording ? 'writing-format-btn-recording' : 'writing-format-btn-inactive'
+            }`}
+            aria-label={isRecording ? 'Stop recording' : 'Start voice input'}
+            title={isRecording ? 'Stop recording (transcribe audio)' : isTranscribing ? 'Transcribing...' : 'Start voice input'}
+          >
+            {isTranscribing ? <Loader2 size={18} strokeWidth={3} className="animate-spin" /> : <Mic size={20} strokeWidth={3} />}
+          </button>
+        )}
       </div>
 
       <div className="writing-actions-group">

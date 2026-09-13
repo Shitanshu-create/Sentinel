@@ -3,6 +3,7 @@ import authController from "../controllers/auth.controller.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
 import { validateBody } from "../middlewares/validate.middleware.js";
 import { loginSchema, registerSchema } from "../validations/auth.validation.js";
+import { updateProfileSchema } from "../validations/profile.validation.js";
 import rateLimit from "express-rate-limit";
 
 const authRouter = express.Router();
@@ -42,5 +43,12 @@ authRouter.post("/logout", authController.logoutUserController);
  * @access Private
  */
 authRouter.get("/get-me", authMiddleware.authUser, authController.getMeController);
+
+/**
+ * @route PUT /api/auth/profile
+ * @desc Update the logged-in user's personal/service/current-status details
+ * @access Private
+ */
+authRouter.put("/profile", authMiddleware.authUser, validateBody(updateProfileSchema), authController.updateProfileController);
 
 export default authRouter;

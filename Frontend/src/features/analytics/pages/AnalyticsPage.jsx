@@ -32,6 +32,7 @@ function AnalyticsPage({
   onOpenWriting,
   onOpenChat,
   onOpenAssessments,
+  onOpenProfile,
   pendingAssessments,
   onLogout,
   entries,
@@ -78,6 +79,7 @@ function AnalyticsPage({
           onOpenChat={onOpenChat}
           onOpenAnalytics={undefined}
           onOpenAssessments={onOpenAssessments}
+          onOpenProfile={onOpenProfile}
           onLogout={onLogout}
           pendingAssessments={pendingAssessments}
         />

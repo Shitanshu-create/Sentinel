@@ -614,7 +614,7 @@
 }
 
 .assign-assessment-question-item:hover {
-  border-color: var(--color-ink);
+  border-color: var(--color-accent);
 }
 
 .assign-assessment-question-item.selected {
@@ -682,18 +682,18 @@
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 0.875rem;
-  box-shadow: 0 4px 15px var(--color-shadow);
+  box-shadow: 2px 2px 0px var(--color-shadow);
   overflow: hidden;
-  transition: border-color 150ms ease;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
   margin-bottom: 0.875rem;
 }
 
 .officer-assessment-row-card:hover {
-  border-color: var(--color-ink);
+  border-color: var(--color-accent);
 }
 
 .officer-assessment-row-card.expanded {
-  border-color: var(--color-ink);
+  border-color: var(--color-accent);
 }
 
 .officer-assessment-row-header {
@@ -720,12 +720,12 @@
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 0.625rem;
-  border: 2px solid var(--color-ink);
-  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface-strong));
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-ink);
+  color: var(--color-accent);
 }
 
 .officer-row-name-line {
@@ -822,10 +822,10 @@
 /* AI Analysis Card */
 .officer-ai-analysis-card {
   background-color: var(--color-surface);
-  border: 2px solid var(--color-ink);
+  border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   padding: 1.25rem;
-  box-shadow: 4px 4px 0px var(--color-ink);
+  box-shadow: 2px 2px 0px var(--color-shadow);
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
@@ -848,8 +848,9 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background-color: var(--color-ink);
-  color: var(--color-surface);
+  background-color: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
   padding: 0.2rem 0.6rem;
   border-radius: 0.35rem;
 }

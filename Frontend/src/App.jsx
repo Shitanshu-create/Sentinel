@@ -18,6 +18,7 @@ const WelfareOfficerDashboardPage = lazy(() => import('./features/welfare-office
 const PersonnelDetailPage = lazy(() => import('./features/welfare-officer/pages/PersonnelDetailPage.jsx'));
 const OfficerAssessmentsPage = lazy(() => import('./features/welfare-officer/pages/OfficerAssessmentsPage.jsx'));
 const PersonnelAssessmentsPage = lazy(() => import('./features/assessments/pages/PersonnelAssessmentsPage.jsx'));
+const ProfilePage = lazy(() => import('./features/profile/pages/ProfilePage.jsx'));
 const CommandDashboardPage = lazy(() => import('./features/commanding-officer/pages/CommandDashboardPage.jsx'));
 const UnitDetailPage = lazy(() => import('./features/commanding-officer/pages/UnitDetailPage.jsx'));
 
@@ -143,6 +144,7 @@ function App() {
                   onOpenAnalytics={() => navigate('/analytics')}
                   onOpenChat={() => navigate('/chat')}
                   onOpenAssessments={() => navigate('/assessments')}
+                  onOpenProfile={() => navigate('/profile')}
                   pendingAssessments={pendingAssessments}
                   entries={entries}
                   setEntries={setEntries}
@@ -161,6 +163,7 @@ function App() {
                   onOpenAnalytics={() => navigate('/analytics')}
                   onOpenWriting={() => navigate('/journal')}
                   onOpenAssessments={() => navigate('/assessments')}
+                  onOpenProfile={() => navigate('/profile')}
                   pendingAssessments={pendingAssessments}
                   entries={entries}
                   onSelectEntry={openEntryInJournal}
@@ -177,6 +180,7 @@ function App() {
                   onOpenWriting={() => navigate('/journal')}
                   onOpenChat={() => navigate('/chat')}
                   onOpenAssessments={() => navigate('/assessments')}
+                  onOpenProfile={() => navigate('/profile')}
                   pendingAssessments={pendingAssessments}
                   entries={entries}
                   onSelectEntry={openEntryInJournal}
@@ -194,6 +198,23 @@ function App() {
                   onOpenChat={() => navigate('/chat')}
                   onOpenAnalytics={() => navigate('/analytics')}
                   onOpenAssessments={() => navigate('/assessments')}
+                  onOpenProfile={() => navigate('/profile')}
+                  pendingAssessments={pendingAssessments}
+                />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute allowedRoles={['personnel']}>
+                <ProfilePage
+                  onLogout={logoutUser}
+                  onOpenWriting={() => navigate('/journal')}
+                  onOpenChat={() => navigate('/chat')}
+                  onOpenAnalytics={() => navigate('/analytics')}
+                  onOpenAssessments={() => navigate('/assessments')}
+                  onOpenProfile={() => navigate('/profile')}
                   pendingAssessments={pendingAssessments}
                 />
               </ProtectedRoute>

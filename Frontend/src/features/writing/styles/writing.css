@@ -376,6 +376,19 @@
   background-color: var(--color-surface-hover);
 }
 
+.writing-format-btn-recording {
+  background-color: var(--color-danger, #ef4444) !important;
+  color: #fff !important;
+  border-color: var(--color-danger, #ef4444) !important;
+  animation: pulse-recording 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-recording {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  50% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
 .writing-actions-group {
   display: flex;
   flex-wrap: wrap;

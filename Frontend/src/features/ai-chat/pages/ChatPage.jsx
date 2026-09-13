@@ -10,6 +10,7 @@ export default function ChatPage({
   onOpenWriting,
   onOpenAnalytics,
   onOpenAssessments,
+  onOpenProfile,
   pendingAssessments,
   onLogout,
   entries,
@@ -39,6 +40,7 @@ export default function ChatPage({
         onOpenChat={undefined}
         onOpenAnalytics={onOpenAnalytics}
         onOpenAssessments={onOpenAssessments}
+        onOpenProfile={onOpenProfile}
         onLogout={onLogout}
         pendingAssessments={pendingAssessments}
       />

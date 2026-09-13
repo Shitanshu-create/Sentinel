@@ -10,6 +10,7 @@ import {
   Moon,
   Sun,
   Home,
+  UserCircle,
   X
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +22,8 @@ const navItems = [
   { id: 'journal', label: 'Open Writing Page', icon: FileText },
   { id: 'chat', label: 'AI Chat', icon: MessageSquareText },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'assessments', label: 'Wellness Assessments', icon: ClipboardList }
+  { id: 'assessments', label: 'Wellness Assessments', icon: ClipboardList },
+  { id: 'profile', label: 'Personnel Profile', icon: UserCircle }
 ];
 
 const mobileNavItems = [
@@ -56,6 +58,7 @@ function AppSidebar({
   onOpenChat,
   onOpenAnalytics,
   onOpenAssessments,
+  onOpenProfile,
   onLogout,
   pendingAssessments = 0
 }) {
@@ -113,6 +116,7 @@ function AppSidebar({
     if (id === 'chat') onOpenChat?.();
     if (id === 'analytics') onOpenAnalytics?.();
     if (id === 'assessments') onOpenAssessments?.();
+    if (id === 'profile') onOpenProfile?.();
   };
 
   const handleMobileNav = (id) => {
@@ -234,6 +238,15 @@ function AppSidebar({
           role="menu"
           aria-label="More navigation options"
         >
+          <button
+            type="button"
+            role="menuitem"
+            className="mobile-sheet-action"
+            onClick={() => handleMobileMenuAction(onOpenProfile)}
+          >
+            <UserCircle size={23} strokeWidth={3} />
+            <span>My Profile</span>
+          </button>
           <button
             type="button"
             role="menuitem"

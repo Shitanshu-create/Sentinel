@@ -12,6 +12,7 @@ export function PersonnelAssessmentsPage({
   onOpenChat,
   onOpenAnalytics,
   onOpenAssessments,
+  onOpenProfile,
   pendingAssessments
 }) {
   const { assessments, pendingCount, assessmentsRequest, reload } = useMyAssessments();
@@ -25,6 +26,7 @@ export function PersonnelAssessmentsPage({
         onOpenChat={onOpenChat}
         onOpenAnalytics={onOpenAnalytics}
         onOpenAssessments={onOpenAssessments}
+        onOpenProfile={onOpenProfile}
         onLogout={onLogout}
         pendingAssessments={effectivePending}
       />

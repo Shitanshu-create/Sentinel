@@ -1,16 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { createEntry, deleteEntry, updateEntry } from '../../ai-chat/services/journal.api.js';
 import { formatEntry } from '../../../shared/utils/formatEntry.js';
+import { blobToBase64 } from '../../../shared/utils/blobToBase64.js';
 
-// Helper to convert browser File object to base64 string
-const fileToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-};
+const fileToBase64 = blobToBase64;
 
 export function useEntryActions({
   selectedEntryId,

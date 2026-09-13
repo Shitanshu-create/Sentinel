@@ -7,6 +7,7 @@ import { useEntryActions } from '../hooks/useEntryActions.js';
 import { useMedia } from '../hooks/useMedia.js';
 import { WritingToolbar } from '../components/WritingToolbar.jsx';
 import { MediaDisplay } from '../components/MediaDisplay.jsx';
+import { useVoiceToText } from '../hooks/useVoiceToText.js';
 import '../styles/writing.css';
 
 // * Helper to convert binary buffer data to base64 data URL
@@ -37,6 +38,7 @@ function WritingPage({
   onOpenAnalytics,
   onOpenChat,
   onOpenAssessments,
+  onOpenProfile,
   pendingAssessments,
   entries,
   setEntries,
@@ -56,6 +58,20 @@ function WritingPage({
 
   const { editor, editorReady, journalText, setJournalText } = useJournalEditor({ selectedEntryId });
   const { media, setMedia, fileInputRef, handleMediaSelect, removeMedia } = useMedia();
+
+  const {
+    isRecording,
+    isTranscribing,
+    isSupported: voiceSupported,
+    error: voiceError,
+    toggleRecording
+  } = useVoiceToText({
+    onTranscribed: (text) => {
+      if (editorReady && editor) {
+        editor.chain().focus().insertContent(text + ' ').run();
+      }
+    }
+  });
 
   const {
     saveStatus,
@@ -153,6 +169,7 @@ function WritingPage({
           onOpenChat={onOpenChat}
           onOpenAnalytics={onOpenAnalytics}
           onOpenAssessments={onOpenAssessments}
+          onOpenProfile={onOpenProfile}
           onLogout={onLogout}
           pendingAssessments={pendingAssessments}
         />
@@ -220,6 +237,18 @@ function WritingPage({
                 </p>
               )}
 
+              {voiceError && (
+                <p className="writing-label" style={{ color: 'var(--color-danger-text, #ef4444)' }}>
+                  {voiceError}
+                </p>
+              )}
+
+              {isTranscribing && (
+                <p className="writing-label" style={{ color: 'var(--color-accent)' }}>
+                  Transcribing voice recording...
+                </p>
+              )}
+
               <WritingToolbar
                 editor={editor}
                 editorReady={editorReady}
@@ -232,6 +261,10 @@ function WritingPage({
                 deleteStatus={deleteStatus}
                 selectedEntryId={selectedEntryId}
                 deleteSelectedEntry={deleteSelectedEntry}
+                isRecording={isRecording}
+                isTranscribing={isTranscribing}
+                voiceSupported={voiceSupported}
+                toggleRecording={toggleRecording}
               />
             </div>
           </div>

@@ -30,4 +30,9 @@ const idParamSchema = z.object({
     id: objectId
 });
 
-export { journalEntrySchema, journalUpdateSchema, chatSchema, idParamSchema };
+const transcribeAudioSchema = z.object({
+    audioData: z.string().min(1, "Audio data is required"),
+    mimeType: z.string().trim().min(1).max(60)
+});
+
+export { journalEntrySchema, journalUpdateSchema, chatSchema, idParamSchema, transcribeAudioSchema };

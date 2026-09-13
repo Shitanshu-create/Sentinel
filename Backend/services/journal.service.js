@@ -3,6 +3,7 @@ import env from "../config/env.js";
 import { sanitizeForPrompt } from "../utils/sanitize.js";
 import InsightsCache from "../models/insightsCache.model.js";
 import journalReportModel from "../models/journalReport.model.js";
+import UserModel from "../models/user.model.js";
 
 function safeParseGeminiResponse(text) {
     try {
@@ -134,18 +135,49 @@ ${sanitizeForPrompt(chat)}
 
 };
 
-async function generateGlobalInsights({ entriesText }) {
+function buildHrContextText(currentStatus) {
+    if (!currentStatus) return "No HR/operational data available yet.";
+    const parts = [];
+
+    if (currentStatus.postingLocation) parts.push(`Current posting: ${sanitizeForPrompt(currentStatus.postingLocation)}`);
+    if (currentStatus.estimatedWorkHours) parts.push(`Estimated daily duty hours: ${currentStatus.estimatedWorkHours}`);
+    if (currentStatus.lastLeaveDate) {
+        const daysSinceLeave = Math.floor((Date.now() - new Date(currentStatus.lastLeaveDate).getTime()) / 86400000);
+        parts.push(`Days since last leave: ${daysSinceLeave}`);
+    }
+    if (currentStatus.dutySchedule) parts.push(`Duty schedule: ${sanitizeForPrompt(currentStatus.dutySchedule)}`);
+    if (currentStatus.deploymentHistory?.length) {
+        const latest = currentStatus.deploymentHistory[currentStatus.deploymentHistory.length - 1];
+        parts.push(`Deployment history: ${currentStatus.deploymentHistory.length} recorded deployment(s), most recent at ${sanitizeForPrompt(latest.location || 'unspecified location')}`);
+    }
+    if (currentStatus.transferHistory?.length) {
+        parts.push(`Transfer frequency: ${currentStatus.transferHistory.length} transfer(s) on record`);
+    }
+    if (currentStatus.trainingCommitments?.length) {
+        parts.push(`Training commitments: ${currentStatus.trainingCommitments.map(t => sanitizeForPrompt(t.name)).join(', ')}`);
+    }
+    if (currentStatus.workloadLevel) {
+        parts.push(`Self-reported workload level: ${currentStatus.workloadLevel}${currentStatus.workloadNotes ? ' — ' + sanitizeForPrompt(currentStatus.workloadNotes) : ''}`);
+    }
+
+    return parts.length ? parts.join('\n') : "No HR/operational data available yet.";
+}
+
+async function generateGlobalInsights({ entriesText, hrContext }) {
     const ai = new GoogleGenAI({
         apiKey: env.googleGenAiApiKey,
     });
 
-    const prompt = `You are an expert occupational wellness and behavioral analyst specializing in stress, fatigue, and burnout patterns in high-stress professional environments. Analyse the following sequence of the user's last 15 journal entries holistically.
+    const prompt = `You are an expert occupational wellness and behavioral analyst specializing in stress, fatigue, and burnout patterns in high-stress professional environments. Analyse the following sequence of the user's last 15 journal entries holistically, using the authorized HR/operational context below only to add explanatory correlation — never as a standalone observation on its own.
 
 Your goals:
-1. Identify exactly 4 high-level, relatable observations about recurring stress/fatigue patterns, emotional cycles, workload-linked mood shifts, or sleep-related trends — grounded in what the entries actually show, not generic statements.
+1. Identify exactly 4 high-level, relatable observations about recurring stress/fatigue patterns, emotional cycles, workload-linked mood shifts, or sleep-related trends — grounded in what the entries actually show. Where relevant, connect a pattern to the HR context below (e.g., linking a stress pattern to a recent deployment or an extended period without leave) — but only when the journal content itself genuinely supports the connection, not just because the HR data exists.
 2. Provide exactly 4 highly personalized, non-clinical welfare recommendations grounded in the actual stress, fatigue, and mood signals you see — never generic productivity advice, and never a medical or diagnostic suggestion.
 
-Frame everything as welfare support, not performance coaching. Do not diagnose or imply any medical/psychological condition.
+Frame everything as welfare support, not performance coaching. Do not diagnose or imply any medical/psychological condition. Do not simply restate the HR context as if it were itself an observation.
+
+Authorized HR/Operational Context (leave patterns, deployment history, duty schedules, transfer frequency, training commitments, workload trends):
+${hrContext || 'No HR/operational data available yet.'}
 
 Journal Entries:
 ${entriesText}`;
@@ -163,7 +195,18 @@ ${entriesText}`;
 }
 
 async function getOrGenerateInsights(userId, forceRefresh = false) {
-    const cachedInsights = await InsightsCache.findOne({ userId });
+    let cachedInsights = null;
+    let user = null;
+    try {
+        cachedInsights = await InsightsCache.findOne({ userId });
+    } catch (cacheErr) {
+        console.error("InsightsCache findOne error:", cacheErr);
+    }
+    try {
+        user = await UserModel.findById(userId).select("currentStatus updatedAt");
+    } catch (userErr) {
+        console.error("UserModel findById error in insights:", userErr);
+    }
 
     let entries = [];
     try {
@@ -192,10 +235,17 @@ async function getOrGenerateInsights(userId, forceRefresh = false) {
     }
 
     const latestEntry = filteredEntries[0];
+    const profileUpdatedAt = user?.updatedAt;
+
+    const cacheCoversLatestProfile = Boolean(
+        cachedInsights?.lastProfileUpdatedAt
+        && profileUpdatedAt
+        && new Date(cachedInsights.lastProfileUpdatedAt).getTime() >= new Date(profileUpdatedAt).getTime()
+    );
 
     // If cached insights exist in DB and not forcing a refresh:
-    // Check if new entries have been created since these insights were generated
-    if (cachedInsights && cachedInsights.data && !forceRefresh) {
+    // Check if new entries or profile update have occurred since insights were generated
+    if (cachedInsights && cachedInsights.data && !forceRefresh && cacheCoversLatestProfile) {
         const isUpToDate = Boolean(
             cachedInsights.lastEntryDate
             && latestEntry?.date
@@ -212,14 +262,16 @@ async function getOrGenerateInsights(userId, forceRefresh = false) {
         }
     }
 
-    // Generate new insights from Gemini only when a new entry was created or forceRefresh is true
+    // Generate new insights from Gemini only when a new entry was created, profile updated, or forceRefresh is true
     const entriesText = filteredEntries.map((en, i) => {
         return `Entry ${i + 1} (${en.date.toDateString()}):\nTitle: ${sanitizeForPrompt(en.title)}\nContent: ${sanitizeForPrompt(en.chat)}\nReflections: ${en.reflection ? en.reflection.join(', ') : ''}`;
     }).join('\n\n---\n\n');
 
+    const hrContext = buildHrContextText(user?.currentStatus);
+
     let insights;
     try {
-        insights = await generateGlobalInsights({ entriesText });
+        insights = await generateGlobalInsights({ entriesText, hrContext });
     } catch (err) {
         console.error("Gemini Global Insights Error:", err);
         if (cachedInsights?.data) {
@@ -235,6 +287,7 @@ async function getOrGenerateInsights(userId, forceRefresh = false) {
             lastGenerated: new Date(), 
             lastEntryId: latestEntry?._id,
             lastEntryDate: latestEntry?.date,
+            lastProfileUpdatedAt: profileUpdatedAt,
             privacyVersion: 1 
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }

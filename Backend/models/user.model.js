@@ -37,7 +37,24 @@ const userSchema = new mongoose.Schema({
             startDate: Date,
             endDate: Date
         }],
-        dutySchedule: { type: String, trim: true, maxlength: 200 }
+        dutySchedule: { type: String, trim: true, maxlength: 200 },
+        transferHistory: [{
+            fromUnit: String,
+            toUnit: String,
+            location: String,
+            transferDate: Date
+        }],
+        trainingCommitments: [{
+            name: String,
+            startDate: Date,
+            endDate: Date
+        }],
+        workloadLevel: {
+            type: String,
+            enum: ["light", "moderate", "heavy", "overloaded"],
+            default: null
+        },
+        workloadNotes: { type: String, maxlength: 300 }
     }
 }, { timestamps: true });
 

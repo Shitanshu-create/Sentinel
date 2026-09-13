@@ -24,6 +24,14 @@ vi.mock("../models/userStats.model.js", () => ({
     default: {}
 }));
 
+vi.mock("../models/user.model.js", () => ({
+    default: {
+        findById: vi.fn().mockReturnValue({
+            select: vi.fn().mockResolvedValue(null)
+        })
+    }
+}));
+
 vi.mock("../models/insightsCache.model.js", () => ({
     default: {
         deleteOne,

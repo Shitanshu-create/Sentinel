@@ -41,3 +41,10 @@ export async function chatWithAI({ message, conversationHistory }) {
     const response = await api.post('/api/journal/chat', { message, conversationHistory });
     return response.data;
 }
+
+// * Transcribe recorded audio clip into text via backend
+export async function transcribeAudio({ audioData, mimeType }) {
+    const response = await api.post('/api/journal/transcribe', { audioData, mimeType });
+    return response.data;
+}
+

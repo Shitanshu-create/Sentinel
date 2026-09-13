@@ -562,6 +562,7 @@
   place-items: center;
   border-radius: 9999px;
   background-color: color-mix(in srgb, var(--color-purple) 14%, transparent);
+  flex-shrink: 0;
 }
 
 .obs-icon-dot {
@@ -702,6 +703,7 @@
 .advice-icon {
   padding-top: 0.25rem;
   color: var(--color-warning);
+  flex-shrink: 0;
 }
 
 .advice-body {
