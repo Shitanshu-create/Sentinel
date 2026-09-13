@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, UserCircle, Mail, Award, MapPin } from 'lucide-react';
+import { Shield, Mail, Award, MapPin } from 'lucide-react';
 import { Panel } from '../../analytics/components/Panel.jsx';
 
 export function ProfileHeaderCard({ user }) {
@@ -28,27 +28,27 @@ export function ProfileHeaderCard({ user }) {
           <div className="profile-title-row">
             <h1 className="profile-user-name">{name}</h1>
             <span className="profile-role-badge">
-              <Shield size={14} className="flex-shrink-0" />
+              <Shield size={13} className="flex-shrink-0" />
               {role.toUpperCase()}
             </span>
           </div>
 
           <div className="profile-meta-tags">
             <span className="profile-meta-item">
-              <Award size={15} />
-              {rank} • {unit}
+              <Award size={14} className="profile-meta-icon" />
+              <span>{rank} • {unit}</span>
             </span>
             <span className="profile-meta-item">
-              <Shield size={15} />
-              {force}
+              <Shield size={14} className="profile-meta-icon" />
+              <span>{force}</span>
             </span>
             <span className="profile-meta-item">
-              <MapPin size={15} />
-              {posting}
+              <MapPin size={14} className="profile-meta-icon" />
+              <span>{posting}</span>
             </span>
             <span className="profile-meta-item">
-              <Mail size={15} />
-              {user?.email}
+              <Mail size={14} className="profile-meta-icon" />
+              <span>{user?.email || 'No email registered'}</span>
             </span>
           </div>
         </div>

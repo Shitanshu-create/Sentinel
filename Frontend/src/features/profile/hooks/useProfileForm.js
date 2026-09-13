@@ -42,17 +42,19 @@ export function useProfileForm(user) {
     if (!user) return;
 
     setPersonalDetails({
-      name: user.personalDetails?.name || '',
-      age: user.personalDetails?.age !== undefined && user.personalDetails?.age !== null ? user.personalDetails.age : '',
-      gender: user.personalDetails?.gender || '',
-      phoneNo: user.personalDetails?.phoneNo || ''
+      name: user.personalDetails?.name || user.name || user.username || '',
+      age: user.personalDetails?.age !== undefined && user.personalDetails?.age !== null
+        ? user.personalDetails.age
+        : (user.age !== undefined && user.age !== null ? user.age : ''),
+      gender: user.personalDetails?.gender || user.gender || '',
+      phoneNo: user.personalDetails?.phoneNo || user.phoneNo || ''
     });
 
     setServiceDetails({
-      rank: user.serviceDetails?.rank || '',
-      jobType: user.serviceDetails?.jobType || '',
-      unit: user.serviceDetails?.unit || '',
-      force: user.serviceDetails?.force || ''
+      rank: user.serviceDetails?.rank || user.rank || '',
+      jobType: user.serviceDetails?.jobType || user.jobType || '',
+      unit: user.serviceDetails?.unit || user.unit || '',
+      force: user.serviceDetails?.force || user.force || ''
     });
 
     const status = user.currentStatus || {};

@@ -147,7 +147,15 @@ async function loginUserController(req, res, next) {
         res.status(200).json(
             {
                 message: "User logged in successfully",
-                user: { id: user._id, username: user.username, email: user.email, role: user.role },
+                user: {
+                    id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    role: user.role,
+                    personalDetails: user.personalDetails || { name: user.username },
+                    serviceDetails: user.serviceDetails || {},
+                    currentStatus: user.currentStatus || {}
+                },
             }
         );
     } catch (error) {

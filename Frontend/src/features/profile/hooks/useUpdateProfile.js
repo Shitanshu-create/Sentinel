@@ -10,7 +10,7 @@ export function useUpdateProfile() {
     try {
       setSaveStatus({ loading: true, error: null, success: false });
       const res = await updateProfile(payload);
-      if (res.user) {
+      if (res.user && typeof setUser === 'function') {
         setUser(res.user);
       }
       setSaveStatus({ loading: false, error: null, success: true });

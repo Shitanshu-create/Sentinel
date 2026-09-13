@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, Clock, Calendar, MapPin, AlertTriangle } from 'lucide-react';
+import { Activity, Clock, Calendar, MapPin, AlertTriangle, FileText } from 'lucide-react';
 import { Panel } from '../../analytics/components/Panel.jsx';
 
 export function CurrentStatusSection({ data, setData }) {
@@ -11,7 +11,7 @@ export function CurrentStatusSection({ data, setData }) {
     <Panel padding="p-6" className="profile-section-card">
       <div className="profile-section-title-row">
         <span className="profile-section-icon">
-          <Activity size={18} strokeWidth={2.5} />
+          <Activity size={20} strokeWidth={2.2} />
         </span>
         <div>
           <h2 className="profile-section-title">Current Operational Status & Workload</h2>
@@ -22,7 +22,7 @@ export function CurrentStatusSection({ data, setData }) {
       <div className="profile-grid-fields">
         <div className="profile-form-group">
           <label className="profile-form-label">
-            <MapPin size={14} className="inline mr-1" />
+            <span className="profile-label-icon"><MapPin size={14} /></span>
             Current Posting Location
           </label>
           <input
@@ -37,7 +37,7 @@ export function CurrentStatusSection({ data, setData }) {
 
         <div className="profile-form-group">
           <label className="profile-form-label">
-            <Clock size={14} className="inline mr-1" />
+            <span className="profile-label-icon"><Clock size={14} /></span>
             Daily Duty Hours (Est.)
           </label>
           <input
@@ -54,7 +54,7 @@ export function CurrentStatusSection({ data, setData }) {
 
         <div className="profile-form-group">
           <label className="profile-form-label">
-            <Calendar size={14} className="inline mr-1" />
+            <span className="profile-label-icon"><Calendar size={14} /></span>
             Last Leave Date
           </label>
           <input
@@ -67,7 +67,7 @@ export function CurrentStatusSection({ data, setData }) {
 
         <div className="profile-form-group">
           <label className="profile-form-label">
-            <Clock size={14} className="inline mr-1" />
+            <span className="profile-label-icon"><Clock size={14} /></span>
             Duty Schedule / Shift Pattern
           </label>
           <input
@@ -82,7 +82,7 @@ export function CurrentStatusSection({ data, setData }) {
 
         <div className="profile-form-group">
           <label className="profile-form-label">
-            <AlertTriangle size={14} className="inline mr-1" />
+            <span className="profile-label-icon"><AlertTriangle size={14} /></span>
             Self-Reported Workload Level
           </label>
           <select
@@ -99,7 +99,13 @@ export function CurrentStatusSection({ data, setData }) {
         </div>
 
         <div className="profile-form-group profile-col-span-full">
-          <label className="profile-form-label">Workload & Operational Notes</label>
+          <div className="profile-label-header">
+            <label className="profile-form-label">
+              <span className="profile-label-icon"><FileText size={14} /></span>
+              Workload & Operational Notes
+            </label>
+            <span className="profile-char-count">{300 - (data.workloadNotes?.length || 0)} chars remaining</span>
+          </div>
           <textarea
             value={data.workloadNotes || ''}
             onChange={(e) => handleChange('workloadNotes', e.target.value)}
@@ -108,7 +114,6 @@ export function CurrentStatusSection({ data, setData }) {
             rows={3}
             maxLength={300}
           />
-          <span className="profile-char-count">{300 - (data.workloadNotes?.length || 0)} chars remaining</span>
         </div>
       </div>
     </Panel>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from 'lucide-react';
+import { User, Calendar, Users, Phone } from 'lucide-react';
 import { Panel } from '../../analytics/components/Panel.jsx';
 
 export function PersonalDetailsSection({ data, setData }) {
@@ -11,7 +11,7 @@ export function PersonalDetailsSection({ data, setData }) {
     <Panel padding="p-6" className="profile-section-card">
       <div className="profile-section-title-row">
         <span className="profile-section-icon">
-          <User size={18} strokeWidth={2.5} />
+          <User size={20} strokeWidth={2.2} />
         </span>
         <div>
           <h2 className="profile-section-title">Personal Details</h2>
@@ -21,19 +21,25 @@ export function PersonalDetailsSection({ data, setData }) {
 
       <div className="profile-grid-fields">
         <div className="profile-form-group">
-          <label className="profile-form-label">Full Name</label>
+          <label className="profile-form-label">
+            <span className="profile-label-icon"><User size={14} /></span>
+            Full Name
+          </label>
           <input
             type="text"
             value={data.name || ''}
             onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="e.g. Rahul Sharma"
+            placeholder="e.g. Ramesh Kumar"
             className="profile-input"
             maxLength={100}
           />
         </div>
 
         <div className="profile-form-group">
-          <label className="profile-form-label">Age (Years)</label>
+          <label className="profile-form-label">
+            <span className="profile-label-icon"><Calendar size={14} /></span>
+            Age (Years)
+          </label>
           <input
             type="number"
             min={18}
@@ -46,7 +52,10 @@ export function PersonalDetailsSection({ data, setData }) {
         </div>
 
         <div className="profile-form-group">
-          <label className="profile-form-label">Gender</label>
+          <label className="profile-form-label">
+            <span className="profile-label-icon"><Users size={14} /></span>
+            Gender
+          </label>
           <select
             value={data.gender || ''}
             onChange={(e) => handleChange('gender', e.target.value)}
@@ -61,7 +70,10 @@ export function PersonalDetailsSection({ data, setData }) {
         </div>
 
         <div className="profile-form-group">
-          <label className="profile-form-label">Phone Number</label>
+          <label className="profile-form-label">
+            <span className="profile-label-icon"><Phone size={14} /></span>
+            Phone Number
+          </label>
           <input
             type="tel"
             value={data.phoneNo || ''}
