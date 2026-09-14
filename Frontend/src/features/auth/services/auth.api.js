@@ -34,7 +34,27 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
+    async (error) => {
+        const originalRequest = error.config;
+
+        if (
+            error.response?.status === 403 &&
+            error.response?.data?.message === 'Invalid CSRF token' &&
+            originalRequest &&
+            !originalRequest._retryCsrf
+        ) {
+            originalRequest._retryCsrf = true;
+            try {
+                const freshToken = await api.get('/api/csrf-token', { skipCsrf: true })
+                    .then((res) => res.data.csrfToken);
+                originalRequest.headers = originalRequest.headers || {};
+                originalRequest.headers['CSRF-Token'] = freshToken;
+                return api(originalRequest);
+            } catch (retryErr) {
+                return Promise.reject(retryErr);
+            }
+        }
+
         if (error.response?.status === 401) {
             const url = error.config?.url || '';
             const isAuthEndpoint = url.includes('/auth/login')

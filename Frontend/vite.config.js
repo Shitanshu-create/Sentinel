@@ -2,6 +2,11 @@ import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+  envDir: '../',
+  server: {
+    host: true,
+    port: 5173
+  },
   plugins: [react()],
   build: {
     rollupOptions: {

@@ -30,7 +30,7 @@ const csrfProtection = (req, res, next) => {
 };
 
 app.use(helmet({
-    contentSecurityPolicy: {
+    contentSecurityPolicy: env.nodeEnv === "production" ? {
         directives: {
             defaultSrc: ["'self'"],
             scriptSrc: ["'self'", "'unsafe-inline'"],
@@ -39,7 +39,7 @@ app.use(helmet({
             imgSrc: ["'self'", "data:", "blob:"],
             connectSrc: ["'self'", env.corsOrigin]
         }
-    }
+    } : false
 }));
 
 const allowedOrigins = new Set([
@@ -52,6 +52,14 @@ app.use(cors({
     origin(origin, callback) {
         if (!origin || allowedOrigins.has(origin)) {
             return callback(null, true);
+        }
+
+        // Allow any local network origin in development
+        if (env.nodeEnv !== "production") {
+            const isLocalNetwork = /^http:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|172\.\d+\.\d+\.\d+|10\.\d+\.\d+\.\d+)(:\d+)?$/.test(origin);
+            if (isLocalNetwork) {
+                return callback(null, true);
+            }
         }
 
         return callback(new Error("Not allowed by CORS"));

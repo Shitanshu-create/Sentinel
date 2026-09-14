@@ -60,20 +60,18 @@ export function WritingToolbar({
         >
           <Highlighter size={20} strokeWidth={3} />
         </button>
-        {voiceSupported && (
-          <button
-            type="button"
-            onClick={toggleRecording}
-            disabled={isTranscribing}
-            className={`writing-format-btn ${
-              isRecording ? 'writing-format-btn-recording' : 'writing-format-btn-inactive'
-            }`}
-            aria-label={isRecording ? 'Stop recording' : 'Start voice input'}
-            title={isRecording ? 'Stop recording (transcribe audio)' : isTranscribing ? 'Transcribing...' : 'Start voice input'}
-          >
-            {isTranscribing ? <Loader2 size={18} strokeWidth={3} className="animate-spin" /> : <Mic size={20} strokeWidth={3} />}
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={toggleRecording}
+          disabled={isTranscribing}
+          className={`writing-format-btn ${
+            isRecording ? 'writing-format-btn-recording' : 'writing-format-btn-inactive'
+          }`}
+          aria-label={isRecording ? 'Stop recording' : 'Start voice input'}
+          title={isRecording ? 'Stop recording (transcribe audio)' : isTranscribing ? 'Transcribing...' : 'Start voice input'}
+        >
+          {isTranscribing ? <Loader2 size={18} strokeWidth={3} className="animate-spin" /> : <Mic size={20} strokeWidth={3} />}
+        </button>
       </div>
 
       <div className="writing-actions-group">
