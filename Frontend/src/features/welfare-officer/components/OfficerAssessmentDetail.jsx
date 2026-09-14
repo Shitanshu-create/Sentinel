@@ -1,8 +1,8 @@
 import React from 'react';
-import { Clock, CheckCircle2, AlertCircle, Lightbulb, Tags } from 'lucide-react';
+import { Clock, CheckCircle2, AlertCircle, Lightbulb, Tags, Plus } from 'lucide-react';
 import { getConcernMeta } from '../../../shared/utils/riskMeta.js';
 
-export function OfficerAssessmentDetail({ assessment }) {
+export function OfficerAssessmentDetail({ assessment, onAssignNew }) {
   const isCompleted = assessment.status === 'completed';
   const concernMeta = isCompleted && assessment.aiAnalysis?.concernLevel
     ? getConcernMeta(assessment.aiAnalysis.concernLevel)
@@ -31,6 +31,8 @@ export function OfficerAssessmentDetail({ assessment }) {
       })
     : null;
 
+  const personnelId = assessment.personnelId?._id || assessment.personnelId?.id || assessment.personnelId;
+
   return (
     <div className="officer-assessment-detail-panel">
       <div className="officer-assessment-detail-meta">
@@ -43,6 +45,19 @@ export function OfficerAssessmentDetail({ assessment }) {
             <CheckCircle2 size={13} />
             Completed: {completedDateStr}
           </span>
+        )}
+        {onAssignNew && personnelId && (
+          <button
+            type="button"
+            className="officer-assign-chip-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAssignNew(personnelId);
+            }}
+          >
+            <Plus size={13} strokeWidth={2.5} />
+            <span>Assign Follow-up Assessment</span>
+          </button>
         )}
       </div>
 

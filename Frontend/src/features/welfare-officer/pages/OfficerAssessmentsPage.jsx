@@ -1,15 +1,18 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Filter, ClipboardList } from 'lucide-react';
+import { Search, Filter, ClipboardList, Plus } from 'lucide-react';
 import OfficerSidebar from '../components/OfficerSidebar.jsx';
 import { OfficerAssessmentRow } from '../components/OfficerAssessmentRow.jsx';
+import { AssignAssessmentModal } from '../components/AssignAssessmentModal.jsx';
 import { useOfficerAssessments } from '../hooks/useOfficerAssessments.js';
 import { Panel } from '../../analytics/components/Panel.jsx';
 import '../styles/welfareOfficer.css';
 
 export function OfficerAssessmentsPage({ onLogout }) {
-  const { assessments, assessmentsRequest } = useOfficerAssessments();
+  const { assessments, assessmentsRequest, reload } = useOfficerAssessments();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPersonnelId, setSelectedPersonnelId] = useState(null);
 
   const filteredAssessments = useMemo(() => {
     return (assessments || []).filter((a) => {
@@ -20,17 +23,32 @@ export function OfficerAssessmentsPage({ onLogout }) {
     });
   }, [assessments, searchTerm, statusFilter]);
 
+  const handleOpenAssignModal = (personnelId = null) => {
+    setSelectedPersonnelId(personnelId);
+    setIsModalOpen(true);
+  };
+
   return (
     <main className="officer-page-container analytics-scroll">
       <div className="officer-flex-wrapper">
         <OfficerSidebar onLogout={onLogout} />
         <section className="officer-section">
           <div className="officer-content-wrapper">
-            <div>
-              <h1 className="officer-page-title">Wellness Assessments Log</h1>
-              <p className="unit-summary-sub">
-                Targeted welfare questionnaires, direct personnel responses, and AI stress evaluations
-              </p>
+            <div className="officer-header-row">
+              <div>
+                <h1 className="officer-page-title">Wellness Assessments Log</h1>
+                <p className="unit-summary-sub">
+                  Targeted welfare questionnaires, direct personnel responses, and AI stress evaluations
+                </p>
+              </div>
+              <button
+                type="button"
+                className="officer-assign-new-btn"
+                onClick={() => handleOpenAssignModal(null)}
+              >
+                <Plus size={16} strokeWidth={2.5} />
+                <span>Assign New Assessment</span>
+              </button>
             </div>
 
             {assessmentsRequest.loading && (
@@ -76,15 +94,29 @@ export function OfficerAssessmentsPage({ onLogout }) {
                 <div className="officer-assessments-list">
                   {filteredAssessments.length > 0 ? (
                     filteredAssessments.map((a) => (
-                      <OfficerAssessmentRow key={a._id} assessment={a} />
+                      <OfficerAssessmentRow
+                        key={a._id}
+                        assessment={a}
+                        onAssignNew={handleOpenAssignModal}
+                      />
                     ))
                   ) : (
                     <Panel padding="p-5" className="roster-empty-panel">
-                      <p className="obs-desc">
-                        {assessments.length === 0
-                          ? "No assessments assigned yet. Go to a personnel's profile from the roster to send an assessment."
-                          : "No assessments match the selected search or filter."}
-                      </p>
+                      <div className="roster-empty-content">
+                        <p className="obs-desc">
+                          {assessments.length === 0
+                            ? "No assessments assigned yet. Assign a targeted questionnaire to begin welfare monitoring."
+                            : "No assessments match the selected search or filter."}
+                        </p>
+                        <button
+                          type="button"
+                          className="officer-assign-new-btn officer-empty-btn"
+                          onClick={() => handleOpenAssignModal(null)}
+                        >
+                          <Plus size={16} strokeWidth={2.5} />
+                          <span>Assign New Assessment</span>
+                        </button>
+                      </div>
                     </Panel>
                   )}
                 </div>
@@ -93,6 +125,13 @@ export function OfficerAssessmentsPage({ onLogout }) {
           </div>
         </section>
       </div>
+
+      <AssignAssessmentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAssigned={reload}
+        initialPersonnelId={selectedPersonnelId}
+      />
     </main>
   );
 }

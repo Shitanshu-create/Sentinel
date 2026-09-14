@@ -201,7 +201,7 @@
 }
 
 .roster-filter-select {
-  background-color: var(--color-surface);
+  background-color: #161b24;
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
@@ -210,6 +210,12 @@
   color: var(--color-text);
   outline: none;
   cursor: pointer;
+  color-scheme: dark;
+}
+
+.roster-filter-select option {
+  background-color: #161b24;
+  color: #f1f5f9;
 }
 
 .roster-table {
@@ -520,18 +526,29 @@
   margin-bottom: 0.4rem;
 }
 
-.add-note-select {
+.add-note-select,
+.officer-personnel-select {
   width: 100%;
-  background-color: var(--color-surface-strong);
+  background-color: #161b24;
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   padding: 0.625rem 0.75rem;
   font-size: 0.875rem;
   color: var(--color-text);
   outline: none;
+  color-scheme: dark;
+  cursor: pointer;
 }
 
-.add-note-select:focus {
+.add-note-select option,
+.officer-personnel-select option {
+  background-color: #161b24;
+  color: #f1f5f9;
+  padding: 0.5rem;
+}
+
+.add-note-select:focus,
+.officer-personnel-select:focus {
   border-color: var(--color-accent);
 }
 
@@ -1002,5 +1019,271 @@
   color: var(--color-text);
   margin: 0;
   white-space: pre-wrap;
+}
+
+/* ── Assessments Page Header & Assign Actions ── */
+.officer-header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+@media (min-width: 640px) {
+  .officer-header-row {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.officer-assign-new-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-accent);
+  color: #0b0f17;
+  border: 1px solid var(--color-accent-strong, var(--color-accent));
+  border-radius: 0.625rem;
+  padding: 0.625rem 1.125rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent) 25%, transparent);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.officer-assign-new-btn:hover {
+  background-color: var(--color-accent-strong, var(--color-accent));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-accent) 40%, transparent);
+}
+
+.officer-assign-new-btn:active {
+  transform: translateY(0);
+}
+
+.officer-assign-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-accent-strong);
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  border: 1px solid var(--color-accent);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+  margin-left: auto;
+}
+
+.officer-assign-chip-btn:hover {
+  background-color: var(--color-accent);
+  color: #0b0f17;
+}
+
+.roster-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.officer-empty-btn {
+  margin-top: 0.25rem;
+}
+
+/* ── Assign Assessment Modal ── */
+.officer-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(5, 8, 15, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: officerFadeIn 180ms ease;
+}
+
+@keyframes officerFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.officer-modal-dialog {
+  background-color: #12151d;
+  color-scheme: dark;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--color-border);
+  width: 100%;
+  max-width: 42rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: officerScaleUp 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes officerScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.officer-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-strong);
+}
+
+.officer-modal-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--color-text-strong);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.officer-modal-subtitle {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin: 0.25rem 0 0 0;
+}
+
+.officer-modal-close-btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  padding: 0.35rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+
+.officer-modal-close-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-strong);
+  border-color: var(--color-text-muted);
+}
+
+.officer-modal-form {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1 1 auto;
+}
+
+.officer-modal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.officer-modal-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.officer-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.officer-selected-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.officer-modal-questions-scroll {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.officer-modal-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.officer-modal-alert.error {
+  background-color: color-mix(in srgb, var(--color-danger) 15%, var(--color-surface));
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+}
+
+.officer-modal-alert.success {
+  background-color: color-mix(in srgb, var(--color-success) 15%, var(--color-surface));
+  border: 1px solid var(--color-success);
+  color: var(--color-success);
+}
+
+.officer-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 0.5rem;
+}
+
+.officer-modal-cancel-btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.officer-modal-cancel-btn:hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-strong);
 }
 

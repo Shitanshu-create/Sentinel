@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, User, Clock, CheckCircle2, AlertTriangle } from
 import { getConcernMeta } from '../../../shared/utils/riskMeta.js';
 import { OfficerAssessmentDetail } from './OfficerAssessmentDetail.jsx';
 
-export function OfficerAssessmentRow({ assessment }) {
+export function OfficerAssessmentRow({ assessment, onAssignNew }) {
   const [expanded, setExpanded] = useState(false);
 
   const isCompleted = assessment.status === 'completed';
@@ -80,7 +80,7 @@ export function OfficerAssessmentRow({ assessment }) {
 
       {expanded && (
         <div className="officer-assessment-row-body">
-          <OfficerAssessmentDetail assessment={assessment} />
+          <OfficerAssessmentDetail assessment={assessment} onAssignNew={onAssignNew} />
         </div>
       )}
     </div>
