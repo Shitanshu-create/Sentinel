@@ -1,0 +1,1289 @@
+/* ── Officer Dashboard & Detail Layout ── */
+.officer-page-container {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color: var(--color-text);
+}
+
+.officer-flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.officer-section {
+  min-width: 0;
+  flex: 1 1 0%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 3rem;
+  transition: margin 300ms ease;
+}
+
+@media (min-width: 640px) {
+  .officer-section {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .officer-section {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (max-width: 499px) {
+  .officer-section {
+    padding-bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  }
+}
+
+.officer-content-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 72rem;
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.officer-page-title {
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  color: var(--color-text-strong);
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+}
+
+/* ── Unit Summary Panel ── */
+.unit-summary-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.unit-summary-header {
+  margin-bottom: 1.25rem;
+}
+
+.unit-summary-sub {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.unit-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .unit-summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .unit-summary-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+  }
+}
+
+.unit-summary-stat {
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: background-color 150ms ease;
+}
+
+.unit-summary-stat:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.unit-stat-value {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.unit-stat-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* ── Roster Table & Toolbar ── */
+.roster-table-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+  overflow: hidden;
+}
+
+.roster-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-strong);
+}
+
+@media (min-width: 640px) {
+  .roster-toolbar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.roster-search-box {
+  position: relative;
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.roster-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-faint);
+  pointer-events: none;
+}
+
+.roster-search-input {
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem 0.5rem 2.25rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 150ms ease;
+}
+
+.roster-search-input:focus {
+  border-color: var(--color-accent);
+}
+
+.roster-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.roster-filter-icon {
+  color: var(--color-text-faint);
+}
+
+.roster-filter-select {
+  background-color: #161b24;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text);
+  outline: none;
+  cursor: pointer;
+  color-scheme: dark;
+}
+
+.roster-filter-select option {
+  background-color: #161b24;
+  color: #f1f5f9;
+}
+
+.roster-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.roster-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.125rem 1.25rem;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  color: inherit;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.roster-row:last-child {
+  border-bottom: none;
+}
+
+.roster-row:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.roster-row-main {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.roster-row-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.roster-row-meta {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+}
+
+.roster-row-metrics {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-shrink: 0;
+}
+
+.roster-metric-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.roster-metric-chip-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--color-text-faint);
+  letter-spacing: 0.05em;
+}
+
+.roster-metric-chip-val {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+}
+
+.roster-risk-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid currentColor;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.roster-row-arrow {
+  color: var(--color-text-faint);
+  transition: transform 150ms ease;
+}
+
+.roster-row:hover .roster-row-arrow {
+  transform: translateX(3px);
+  color: var(--color-accent);
+}
+
+.roster-no-match {
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.roster-empty-panel {
+  text-align: center;
+}
+
+/* ── Personnel Detail Page Header ── */
+.personnel-header-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.personnel-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+  margin-bottom: 1.25rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.personnel-back-btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.personnel-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.personnel-avatar-badge {
+  height: 3.75rem;
+  width: 3.75rem;
+  border-radius: 1rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  display: grid;
+  place-items: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.personnel-profile-info {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.personnel-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.personnel-profile-name {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.personnel-rank-pill {
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  background: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.personnel-meta-grid {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.65rem;
+}
+
+.personnel-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.personnel-meta-item .meta-icon {
+  color: var(--color-text-faint);
+}
+
+/* ── Welfare Notes Panel ── */
+.welfare-notes-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.welfare-notes-header {
+  margin-bottom: 1.25rem;
+}
+
+.welfare-notes-sub {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.welfare-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.welfare-note-card {
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  transition: background-color 150ms ease;
+}
+
+.welfare-note-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.welfare-note-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.welfare-note-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-faint);
+}
+
+.welfare-note-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-soft);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.welfare-notes-empty {
+  padding: 1rem 0;
+}
+
+/* ── Add Note Form Panel ── */
+.add-note-panel {
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 10px 30px var(--color-shadow);
+}
+
+.add-note-header {
+  margin-bottom: 1rem;
+}
+
+.add-note-sub {
+  margin-top: 0.25rem;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.add-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.add-note-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-faint);
+  margin-bottom: 0.4rem;
+}
+
+.add-note-select,
+.officer-personnel-select {
+  width: 100%;
+  background-color: #161b24;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  outline: none;
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.add-note-select option,
+.officer-personnel-select option {
+  background-color: #161b24;
+  color: #f1f5f9;
+  padding: 0.5rem;
+}
+
+.add-note-select:focus,
+.officer-personnel-select:focus {
+  border-color: var(--color-accent);
+}
+
+.add-note-textarea {
+  width: 100%;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text);
+  outline: none;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.add-note-textarea:focus {
+  border-color: var(--color-accent);
+}
+
+.add-note-error {
+  color: var(--color-danger);
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+.add-note-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-note-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-accent-strong);
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 150ms ease, opacity 150ms ease;
+}
+
+.add-note-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.add-note-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Wellness Assessment Assign Form & Officer Lists ── */
+.assign-assessment-question-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.625rem;
+}
+
+@media (min-width: 640px) {
+  .assign-assessment-question-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.assign-assessment-question-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 0.875rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.assign-assessment-question-item:hover {
+  border-color: var(--color-accent);
+}
+
+.assign-assessment-question-item.selected {
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  border-color: var(--color-accent);
+}
+
+.assign-assessment-checkbox {
+  margin-top: 0.2rem;
+  accent-color: var(--color-accent-strong);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.assign-assessment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.assign-assessment-category {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 0.35rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-accent-strong);
+}
+
+.assign-assessment-text {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-strong);
+  line-height: 1.35;
+}
+
+.assign-assessment-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.25rem;
+}
+
+.assign-assessment-counter {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.assign-assessment-counter.insufficient {
+  color: var(--color-warning);
+}
+
+.assign-assessment-counter.ready {
+  color: var(--color-success);
+}
+
+/* ── Officer Assessments Row & Detail ── */
+.officer-assessment-row-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.875rem;
+  box-shadow: 2px 2px 0px var(--color-shadow);
+  overflow: hidden;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  margin-bottom: 0.875rem;
+}
+
+.officer-assessment-row-card:hover {
+  border-color: var(--color-accent);
+}
+
+.officer-assessment-row-card.expanded {
+  border-color: var(--color-accent);
+}
+
+.officer-assessment-row-header {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.officer-row-person-info {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.officer-row-avatar {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--color-border);
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface-strong));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+}
+
+.officer-row-name-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.officer-row-name {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+}
+
+.officer-row-unit {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+.officer-row-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  margin-top: 0.15rem;
+}
+
+.officer-row-status-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.officer-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border: 1px solid var(--color-border);
+}
+
+.officer-status-pill.completed {
+  background-color: color-mix(in srgb, var(--color-success) 15%, var(--color-surface));
+  color: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.officer-status-pill.pending {
+  background-color: color-mix(in srgb, var(--color-warning) 15%, var(--color-surface));
+  color: var(--color-warning);
+  border-color: var(--color-warning);
+}
+
+.officer-row-toggle-icon {
+  color: var(--color-text-faint);
+}
+
+.officer-assessment-row-body {
+  border-top: 1px solid var(--color-border);
+  padding: 1.25rem;
+  background-color: var(--color-surface-strong);
+}
+
+.officer-assessment-detail-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.officer-assessment-detail-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.officer-detail-meta-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.5rem;
+}
+
+/* AI Analysis Card */
+.officer-ai-analysis-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 2px 2px 0px var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.officer-ai-analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.officer-ai-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.officer-ai-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.35rem;
+}
+
+.officer-ai-summary {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.officer-ai-factors-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.officer-ai-factors-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-faint);
+}
+
+.officer-ai-factors-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.officer-factor-chip {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.4rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-strong);
+}
+
+.officer-ai-action-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+  border: 1px solid var(--color-accent);
+}
+
+.officer-action-icon {
+  color: var(--color-accent-strong);
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.officer-action-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-accent-strong);
+  margin: 0 0 0.2rem 0;
+}
+
+.officer-action-text {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* QA section */
+.officer-qa-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.officer-qa-title {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--color-text-strong);
+  margin: 0;
+}
+
+.officer-qa-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.officer-qa-item {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  padding: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.officer-qa-question {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+}
+
+.officer-qa-num {
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.35rem;
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.officer-q-text {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-text-strong);
+  margin: 0.2rem 0 0 0;
+}
+
+.officer-qa-answer {
+  background-color: var(--color-surface-strong);
+  border-left: 3px solid var(--color-accent);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0 0.35rem 0.35rem 0;
+}
+
+.officer-a-label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--color-text-faint);
+  margin-bottom: 0.2rem;
+}
+
+.officer-a-text {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-text);
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* ── Assessments Page Header & Assign Actions ── */
+.officer-header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+@media (min-width: 640px) {
+  .officer-header-row {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.officer-assign-new-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--color-accent);
+  color: #0b0f17;
+  border: 1px solid var(--color-accent-strong, var(--color-accent));
+  border-radius: 0.625rem;
+  padding: 0.625rem 1.125rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent) 25%, transparent);
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.officer-assign-new-btn:hover {
+  background-color: var(--color-accent-strong, var(--color-accent));
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--color-accent) 40%, transparent);
+}
+
+.officer-assign-new-btn:active {
+  transform: translateY(0);
+}
+
+.officer-assign-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-accent-strong);
+  background-color: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface));
+  border: 1px solid var(--color-accent);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+  margin-left: auto;
+}
+
+.officer-assign-chip-btn:hover {
+  background-color: var(--color-accent);
+  color: #0b0f17;
+}
+
+.roster-empty-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.officer-empty-btn {
+  margin-top: 0.25rem;
+}
+
+/* ── Assign Assessment Modal ── */
+.officer-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(5, 8, 15, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: officerFadeIn 180ms ease;
+}
+
+@keyframes officerFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.officer-modal-dialog {
+  background-color: #12151d;
+  color-scheme: dark;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--color-border);
+  width: 100%;
+  max-width: 42rem;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: officerScaleUp 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes officerScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.officer-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-strong);
+}
+
+.officer-modal-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--color-text-strong);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.officer-modal-subtitle {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin: 0.25rem 0 0 0;
+}
+
+.officer-modal-close-btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  padding: 0.35rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+
+.officer-modal-close-btn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-strong);
+  border-color: var(--color-text-muted);
+}
+
+.officer-modal-form {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex: 1 1 auto;
+}
+
+.officer-modal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.officer-modal-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.officer-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.officer-selected-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+}
+
+.officer-modal-questions-scroll {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.officer-modal-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.officer-modal-alert.error {
+  background-color: color-mix(in srgb, var(--color-danger) 15%, var(--color-surface));
+  border: 1px solid var(--color-danger);
+  color: var(--color-danger);
+}
+
+.officer-modal-alert.success {
+  background-color: color-mix(in srgb, var(--color-success) 15%, var(--color-surface));
+  border: 1px solid var(--color-success);
+  color: var(--color-success);
+}
+
+.officer-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 0.5rem;
+}
+
+.officer-modal-cancel-btn {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  border-radius: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.officer-modal-cancel-btn:hover:not(:disabled) {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-strong);
+}
+
