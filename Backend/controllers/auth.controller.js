@@ -9,7 +9,8 @@ const authCookieOptions = {
     httpOnly: true,
     secure: env.cookie.secure,
     sameSite: env.cookie.sameSite,
-    maxAge: env.cookie.maxAge
+    maxAge: env.cookie.maxAge,
+    partitioned: true
 };
 
 /**
@@ -78,6 +79,7 @@ async function registerUserController(req, res, next) {
         res.status(201).json(
             {
                 message: "User registered successfully",
+                token,
                 user: {
                     id: newUser._id,
                     username: newUser.username,
@@ -147,6 +149,7 @@ async function loginUserController(req, res, next) {
         res.status(200).json(
             {
                 message: "User logged in successfully",
+                token,
                 user: {
                     id: user._id,
                     username: user.username,

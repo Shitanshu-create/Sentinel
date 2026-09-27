@@ -21,6 +21,12 @@ async function getCsrfToken() {
 }
 
 api.interceptors.request.use(async (config) => {
+    const token = localStorage.getItem('sentinel_auth_token');
+    if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+
     const method = (config.method || 'get').toLowerCase();
     const needsCsrf = ['post', 'put', 'patch', 'delete'].includes(method);
 
@@ -56,6 +62,7 @@ api.interceptors.response.use(
         }
 
         if (error.response?.status === 401) {
+            localStorage.removeItem('sentinel_auth_token');
             const url = error.config?.url || '';
             const isAuthEndpoint = url.includes('/auth/login')
                 || url.includes('/auth/register')
@@ -90,6 +97,9 @@ export async function register(payload) {
             password: payload.password
         };
         const response = await api.post("/api/auth/register", body);
+        if (response.data?.token) {
+            localStorage.setItem('sentinel_auth_token', response.data.token);
+        }
         return { success: true, ...response.data };
     } catch (err) {
         return { 
@@ -105,6 +115,9 @@ export async function login({ email, password}) {
             email,
             password
         });
+        if (response.data?.token) {
+            localStorage.setItem('sentinel_auth_token', response.data.token);
+        }
         return { success: true, ...response.data };
     } catch (err) {
         return { 
@@ -117,9 +130,11 @@ export async function login({ email, password}) {
 
 export async function logout() {
     try {
+        localStorage.removeItem('sentinel_auth_token');
         const response = await api.post("/api/auth/logout", {});
         return response.data;
     } catch (err) {
+        localStorage.removeItem('sentinel_auth_token');
         throw err;
     }
 }

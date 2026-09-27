@@ -46,8 +46,12 @@ const env = {
     },
     backendUrl: typeof process.env.BACKEND_URL === "string" ? process.env.BACKEND_URL.trim() : (process.env.BACKEND_URL || `http://localhost:${parseInteger(process.env.PORT, 3000)}`),
     cookie: {
-        secure: parseBoolean(process.env.COOKIE_SECURE, typeof process.env.NODE_ENV === "string" && process.env.NODE_ENV.trim() === "production"),
-        sameSite: typeof process.env.COOKIE_SAME_SITE === "string" ? process.env.COOKIE_SAME_SITE.trim() : (process.env.COOKIE_SAME_SITE || "Lax"),
+        secure: typeof process.env.COOKIE_SECURE === "string" 
+            ? parseBoolean(process.env.COOKIE_SECURE, true) 
+            : (typeof process.env.NODE_ENV === "string" && process.env.NODE_ENV.trim() === "production"),
+        sameSite: typeof process.env.COOKIE_SAME_SITE === "string" 
+            ? process.env.COOKIE_SAME_SITE.trim() 
+            : (process.env.NODE_ENV === "production" ? "none" : "lax"),
         maxAge: parseInteger(process.env.COOKIE_MAX_AGE_MS, 24 * 60 * 60 * 1000)
     },
     csrfCookieName: typeof process.env.CSRF_COOKIE_NAME === "string" ? process.env.CSRF_COOKIE_NAME.trim() : (process.env.CSRF_COOKIE_NAME || "_csrf"),

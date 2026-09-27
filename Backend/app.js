@@ -22,12 +22,19 @@ const csrfProtection = (req, res, next) => {
     const cookieToken = req.cookies[env.csrfCookieName];
     const headerToken = req.headers['csrf-token'] || req.headers['x-csrf-token'];
     
-    if (!cookieToken || !headerToken || cookieToken !== headerToken) {
-        const error = new Error("Invalid CSRF token");
-        error.code = "EBADCSRFTOKEN";
-        return next(error);
+    // 1. Double-submit cookie match (standard)
+    if (cookieToken && headerToken && cookieToken === headerToken) {
+        return next();
     }
-    next();
+
+    // 2. Cross-domain fallback (Netlify ↔ Render when browser blocks 3rd-party cookies)
+    if (!cookieToken && headerToken && req.headers.origin && allowedOrigins.has(req.headers.origin)) {
+        return next();
+    }
+    
+    const error = new Error("Invalid CSRF token");
+    error.code = "EBADCSRFTOKEN";
+    return next(error);
 };
 
 app.use(helmet({
@@ -87,7 +94,8 @@ app.get("/api/csrf-token", (req, res) => {
     res.cookie(env.csrfCookieName, token, {
         httpOnly: true,
         secure: env.cookie.secure,
-        sameSite: env.cookie.sameSite
+        sameSite: env.cookie.sameSite,
+        partitioned: true
     });
     res.status(200).json({ csrfToken: token });
 });
