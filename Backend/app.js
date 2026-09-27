@@ -15,6 +15,7 @@ import crypto from "crypto";
 
 
 const app = express();
+app.set("trust proxy", 1);
 const csrfProtection = (req, res, next) => {
     if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
     
